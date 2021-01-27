@@ -29,7 +29,7 @@ def generate_launch_description():
 	spawn_entity = Node(
 						package = 'gazebo_ros', 
 						node_executable = 'spawn_entity.py',
-						arguments = ['-entity', 'my_robot', '-topic', "/robot_description"],
+						arguments = ['-entity', 'my_robot', '-topic', "/robot_description",'-x','1','-y','1'],
 						# arguments = ['-entity', 'my_robot', '-file', "/tmp/my_robot.urdf"],
 						output = 'screen',
 					)
