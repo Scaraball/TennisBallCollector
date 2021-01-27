@@ -11,8 +11,6 @@ Ceci est un template de dépôt Git pour le cours d'ingénierie système et mod�
 
 
 ### Démarrer la simulation
-
-###### A compléter avec la/les commande(s) à lancer.
 ```
 ros2 launch my_robot_gazebo spawner.launch.py
 ```
