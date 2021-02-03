@@ -19,12 +19,15 @@ class ControlPinces(Node):
 		self.subscriber_relache_ok = self.create_subscription(Bool,'relache',self.callback_relache,1)
 		self.publisher_pinces_commande = self.create_publisher(Twist, 'cmd_pince', 10)
 		self.publisher_roues_commande = self.create_publisher(Twist, 'cmd_roues', 10)
+		self.publisher_in_pince = self.create_publisher(Bool,'in_pince',10)
+		self.publisher_out_pince = self.create_publisher(Bool,'out_pince',10)
 		self.get_logger().info('Initialisation complete')
 		self.take_ball = True
 		self.relache_ball = True
 
 
 	def callback_initialize(self,msg):
+		self.publisher_in_pince.publish(Bool(data=False))
 		if msg.data == True and self.take_ball:
 			self.ouvre(2)
 			self.stop_ouverture_fermeture()
@@ -33,10 +36,14 @@ class ControlPinces(Node):
 			self.ferme(3)
 			self.stop_ouverture_fermeture()
 			self.take_ball = False
+			self.publisher_in_pince.publish(Bool(data=True))
 		if msg.data == False:
 			self.take_ball = True
 
+		
+
 	def callback_relache(self,msg):
+		self.publisher_out_pince.publish(Bool(data=False))
 		if msg.data == True and self.relache_ball:
 			self.ouvre(3)
 			self.stop_ouverture_fermeture()
@@ -45,8 +52,12 @@ class ControlPinces(Node):
 			self.ferme(2)
 			self.stop_ouverture_fermeture()
 			self.relache_ball = False
+			self.publisher_out_pince.publish(Bool(data=True))
 		if msg.data == False:
 			self.relache_ball = True
+			
+		
+
 
 	def ouvre(self,t):
 		print('ouvre')
@@ -66,6 +77,7 @@ class ControlPinces(Node):
 		print('avance')
 		control = Twist()
 		control.linear.x = 1.0
+		control.angular.z =0.0
 		self.publisher_roues_commande.publish(control)
 		time.sleep(1)
 
@@ -73,6 +85,7 @@ class ControlPinces(Node):
 		print('stop')
 		control = Twist()
 		control.linear.x = 0.0
+		control.angular.z =0.0
 		self.publisher_roues_commande.publish(control)
 		time.sleep(0.2)
 
@@ -88,6 +101,7 @@ class ControlPinces(Node):
 		print('recule')
 		control = Twist()
 		control.linear.x = -1.0
+		control.angular.z =0.0
 		self.publisher_roues_commande.publish(control)
 		time.sleep(1)
 
