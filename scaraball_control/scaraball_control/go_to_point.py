@@ -20,7 +20,7 @@ class ControllerNode(Node):
 
 	def __init__(self):
 		super().__init__('ReadingLaser')
-		self.publisher_command = self.create_publisher(Twist, 'cmd_vel', 10)  # queuesize=10
+		self.publisher_command = self.create_publisher(Twist, 'cmd_roues', 10)  # queuesize=10
 		self.publisher_nearball = self.create_publisher(Bool, 'near_ball', 10)
 		self.publisher_relache = self.create_publisher(Bool, 'relache', 10)
 		
