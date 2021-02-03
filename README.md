@@ -7,27 +7,30 @@ Ceci est un template de dépôt Git pour le cours d'ingénierie système et mod�
 
 ### Dépendences
 
-###### A compléter avec la/les dépendences.
+
+OpenCV
 
 
 ### Démarrer la simulation
-
-###### A compléter avec la/les commande(s) à lancer.
-```bash
-# TODO
+```
+ros2 launch my_robot_gazebo spawner.launch.py
 ```
 
 
 ## Groupe
+Groupe3
 
 ### Membres
-
-###### A compléter avec les membres du groupe.
+Maha Halimi
+Julien Piranda
+Paul Pineau
+Mourtaza Kassamaly
+Quentin Vintras
 
 
 ### Gestion de projet
 
-###### A compléter avec le lien vers votre [Taiga](https://taiga.io).
+https://tree.taiga.io/project/mourtazakassamaly-tennisballcollector/timeline
 
 
 
