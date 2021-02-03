@@ -35,7 +35,7 @@ class ReadingLaserNode(Node):
 			'7': min(min(msg.ranges[315:360]), 10),
 		}
 
-		self.get_logger().info(str(regions) + '\n')
+		#self.get_logger().info(str(regions) + '\n')
 		# self.take_action(regions)
 
 	def take_action(regions):
