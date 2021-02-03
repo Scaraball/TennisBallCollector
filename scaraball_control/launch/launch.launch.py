@@ -8,7 +8,7 @@ def generate_launch_description():
 	control_node = Node(
 		package='scaraball_control',
 		output='screen',
-		node_executable='reading_laser',
+		node_executable='go_to_point',
 		emulate_tty = True,
 	)
 
