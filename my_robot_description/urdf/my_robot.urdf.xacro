@@ -170,6 +170,16 @@
 			<origin xyz="0 0 0" rpy="0 0 0"/>		
 		</xacro:sphere_inertial>
 	</link>
+
+	<gazebo reference="boule_gauche">
+		<mu1>5</mu1>
+		<mu2>5</mu2>
+		<kp>500000.0</kp>
+		<kd>10.0</kd>
+		<minDepth>0.001</minDepth>
+		<maxVel>0.1</maxVel>
+		<material>Gazebo/FlatBlack</material>
+	</gazebo>
 	
 		
 	<link name="boule_droite">
@@ -187,6 +197,16 @@
 			<origin rpy="0 0 0" xyz="0 0 0"/>
 		</xacro:sphere_inertial>
 	</link>
+
+	<gazebo reference="boule_droite">
+		<mu1>5</mu1>
+		<mu2>5</mu2>
+		<kp>500000.0</kp>
+		<kd>10.0</kd>
+		<minDepth>0.001</minDepth>
+		<maxVel>0.1</maxVel>
+		<material>Gazebo/FlatBlack</material>
+	</gazebo>
 	
 	<gazebo reference="bras_gauche">
 		<mu1>1.2</mu1>
