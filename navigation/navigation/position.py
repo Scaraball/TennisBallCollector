@@ -104,7 +104,7 @@ class position_node(Node):
             # proper assignment
             assignment = linear_assignment(cost)
             for ass in assignment:
-                if cost[ass[0], ass[1]] < 100: # maximum "jump" a bee can make between two consecutive detections in pixels
+                if cost[ass[0], ass[1]] < 300: # maximum "jump" a bee can make between two consecutive detections in pixels
                     self.list_balls[ass[1]].move(keypoints[ass[0]])
                     freeBees[ass[1]] = False
                     freeKP[ass[0]] = False
