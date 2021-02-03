@@ -7,7 +7,8 @@ Ceci est un template de dépôt Git pour le cours d'ingénierie système et mod�
 
 ### Dépendences
 
-###### A compléter avec la/les dépendences.
+
+OpenCV
 
 
 ### Démarrer la simulation
