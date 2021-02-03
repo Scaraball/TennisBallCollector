@@ -58,14 +58,22 @@ class position_node(Node):
                     if (M["m00"] != 0):
                         # print("Je suis M")
 
-                        cX = int(M["m10"] / M["m00"]) - 33
-                        cY = int(M["m01"] / M["m00"]) - 39
+                        # cX = int(M["m10"] / M["m00"]) - 33
+                        # cY = int(M["m01"] / M["m00"]) - 39
 
-                        print(cX,cY)
-                        pose.position.x = float(cX)
-                        pose.position.y = float(cY)
+                        cY = 640 - int(M["m10"] / M["m00"])
+                        cX = 362 - int(M["m01"] / M["m00"])
 
-                        cv2.circle(cvImg_bis, (cX+33, cY+39), 5, (0, 255, 0), -1)
+                        # print(cX/60,cY/40)
+                        kx = 5.1 / 219
+                        ky = 11.383945 / 480
+                        pose.position.x = float(cX)*kx
+                        pose.position.y = float(cY)*ky
+                        print(cX*kx, cY*ky)
+                        cX = int(M["m10"] / M["m00"])
+                        cY = int(M["m01"] / M["m00"])
+
+                        cv2.circle(cvImg_bis, (cX, cY), 5, (0, 255, 0), -1)
             pose_array.poses.append(pose)
 
         lower_g = np.array([41, 200, 100])
@@ -88,14 +96,21 @@ class position_node(Node):
                     if (M["m00"] != 0):
                         # print("Je suis M")
 
-                        cX = int(M["m10"] / M["m00"]) - 33
-                        cY = int(M["m01"] / M["m00"]) - 39
+                        cY = 640 - int(M["m10"] / M["m00"])
+                        cX = 362 - int(M["m01"] / M["m00"])
 
-                        print(cX, cY)
-                        pose_rob.position.x = float(cX)
-                        pose_rob.position.y = float(cY)
 
-                        cv2.circle(cvImg_bis, (cX + 33, cY + 39), 5, (255, 0, 0), -1)
+                        kx = 5.1/219
+                        ky = 11.383945/480
+                        pose_rob.position.x = float(cX)*kx
+                        pose_rob.position.y = float(cY)*ky
+
+                        print(cX*kx, cY*ky)
+
+                        cX = int(M["m10"] / M["m00"])
+                        cY = int(M["m01"] / M["m00"])
+
+                        cv2.circle(cvImg_bis, (cX, cY), 5, (255,0, 0), -1)
 
 
 
