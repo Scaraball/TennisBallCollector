@@ -21,7 +21,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-	'reading_laser = scaraball_control.reading_laser:main'
+	'reading_laser = scaraball_control.reading_laser:main',
+	'control_pinces = scaraball_control.control_pince:main'
         ],
     },
 )

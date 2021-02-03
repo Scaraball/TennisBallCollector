@@ -12,5 +12,11 @@ def generate_launch_description():
 		emulate_tty = True,
 	)
 
-	return LaunchDescription([control_node])
+	control_pinces_node = Node(
+		package='scaraball_control',
+		output='screen',
+		node_executable='control_pinces',emulate_tty = True
+	)
+
+	return LaunchDescription([control_node,control_pinces_node])
 
