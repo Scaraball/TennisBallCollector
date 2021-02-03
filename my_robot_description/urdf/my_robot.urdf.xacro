@@ -16,7 +16,7 @@
       		</collision>
       		<xacro:box_inertial mass="1." sx="0.5" sy="0.25" sz="0.25">
 				<origin xyz="0 0 0" rpy="0 0 0"/>		
-			</xacro:box_inertial>
+		</xacro:box_inertial>
 	</link>
 
 	<link name="lidar">
@@ -32,8 +32,12 @@
       		</collision>
     		<xacro:cylinder_inertial mass="0.05" r="0.1" l="0.05">
 				<origin rpy="0 0 0" xyz="0 0 0"/>
-			</xacro:cylinder_inertial>
+		</xacro:cylinder_inertial>
 	</link>
+	
+	<gazebo reference="lidar">
+		<material>Gazebo/Green</material>
+	</gazebo>
 
 	<link name="rightwheel">
 		<visual>
@@ -195,7 +199,7 @@
 		<maxVel>0.1</maxVel>
 		<material>Gazebo/FlatBlack</material>
 	</gazebo>
-			<gazebo reference="bras_droit">
+	<gazebo reference="bras_droit">
 		<mu1>1.2</mu1>
 		<mu2>1.2</mu2>
 		<kp>500000.0</kp>
