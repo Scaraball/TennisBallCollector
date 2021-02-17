@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'navigation'
+package_name = 'scaraball_camera'
 
 setup(
     name=package_name,
@@ -21,7 +21,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'position = navigation.position:main'
+            'position = scaraball_camera.position:main'
         ],
     },
 )
