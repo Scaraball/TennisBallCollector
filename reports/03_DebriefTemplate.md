@@ -30,7 +30,7 @@ Il faudra bien penser à l'architecture du code et à comment on peut séparer c
 
 ## Nouvelles mesures
 
-####Les nouvelles mesures sont :
+#### Les nouvelles mesures sont :
 ###### - Navigation par champ de potentiels artificiels
 ###### - Modification du nom des packages
 ###### - Séparation de la partie navigation et de la partie envoie des informations de navigation (un noeud envoie la position où le robot doit se rendre, un autre permet de faire rouler le robot jusqu'à cette postion.)
