@@ -19,16 +19,18 @@ import time
 class ControllerNode(Node):
 
 	def __init__(self):
-		super().__init__('ReadingLaser')
+		super().__init__('Controller')
 		self.publisher_command = self.create_publisher(Twist, 'cmd_roues', 10)  # queuesize=10
 		self.publisher_nearball = self.create_publisher(Bool, 'near_ball', 10)
 		self.publisher_relache = self.create_publisher(Bool, 'relache', 10)
-		
+		self.publisher_catch = self.create_publisher(Bool, 'catch', 10)
+
 		self.subscriber_inpince = self.create_subscription(Bool, 'in_pince', self.clbk_inpince, 0)
 		self.subscriber_outpince = self.create_subscription(Bool, 'out_pince', self.clbk_outpince, 0)
-		self.subscriber_balls = self.create_subscription(PoseArray, 'posBall', self.clbk_balls, 0)
+		# self.subscriber_balls = self.create_subscription(PoseArray, 'posBall', self.clbk_balls, 0)
 		self.subscriber_rob = self.create_subscription(Pose, 'posRob', self.clbk_rob, 0)
 		self.subscriber_pose = self.create_subscription(Odometry, 'odom_roues', self.clbk_odom, 0)
+		self.subscriber_target = self.create_subscription(Pose, 'next_pos', self.clbk_target, 0)
 		self.timer = self.create_timer(1/20., self.timer_callback)  # 20 Hz
 
 		self.get_logger().info('Initialisation complete')
@@ -38,7 +40,6 @@ class ControllerNode(Node):
 		self.position = Point(x=self.initial_position.x, y=self.initial_position.y)
 		self.yaw = 0.
 		self.state = 0  # finite state machine
-		self.left_storage_area, self.right_storage_area = Point(x=6.78, y=13.52), Point(x=-6.78, y=-13.52)
 		self.desired_position = Point(x=self.initial_position.x, y=self.initial_position.y)
 		self.going_to_ball = True
 		self.started = False
@@ -62,6 +63,8 @@ class ControllerNode(Node):
 	def timer_callback(self):
 		if not self.started: return
 
+		self.publisher_catch.publish(Bool(data=False))
+
 		if self.state == 0: self.move_to()
 		elif self.state == 1: self.done()
 
@@ -69,19 +72,18 @@ class ControllerNode(Node):
 		print("In pince :", msg.data)
 		if msg.data == True:
 			self.going_to_ball = False
-			self.desired_position = self.right_storage_area if self.position.y < 0 else self.left_storage_area
+			self.publisher_catch.publish(Bool(data=True))
 			self.change_state(state=0) 
 			
 
 	def clbk_outpince(self, msg):
 		print("Out pince :", msg.data)
 		if msg.data == True:
-			self.desired_position = Point(x=self.balls[0][0], y=self.balls[0][1])
-			self.change_state(state=0)
 			self.going_to_ball = True
-			if self.balls == []: self.change_state(state=5)
-
-	def clbk_balls(self, msg):  # type pose array
+			self.publisher_catch.publish(Bool(data=True))
+			self.change_state(state=0)
+			
+	"""def clbk_balls(self, msg):  # type pose array
 		for i in range(len(msg.poses)):
 			self.balls.append( [msg.poses[i].position.x, msg.poses[i].position.y] )
 
@@ -90,7 +92,12 @@ class ControllerNode(Node):
 
 		if not self.started:
 			self.desired_position = Point(x=self.balls[0][0], y=self.balls[0][1])
-			self.started = True
+			self.started = True"""
+
+	def clbk_target(self, msg):
+		self.desired_position = Point(x=msg.position.x, y=msg.position.y)
+		print(self.desired_position)
+		self.started = True
 
 	def clbk_rob(self, msg):  # pose
 		self.position.x, self.position.y = msg.position.x, msg.position.y
@@ -117,7 +124,6 @@ class ControllerNode(Node):
 		self.publisher_command.publish(msg_cmd)  # angular velocity command (yaw)
 
 	def done(self):
-		print("Done")
 		if not self.taking_ball:
 			twist_msg = Twist()
 			self.publisher_command.publish(twist_msg)

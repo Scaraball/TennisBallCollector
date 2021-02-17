@@ -10,7 +10,7 @@ from rclpy.qos import qos_profile_sensor_data
 from geometry_msgs.msg import Pose,PoseArray
 
 import math
-from navigation.munkres import linear_assignment # local import
+from scaraball_camera.munkres import linear_assignment # local import
 
 #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
 

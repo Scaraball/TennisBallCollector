@@ -18,7 +18,7 @@ class Opitmisation(Node):
 		self.get_logger().info('Initialisation complete')
 
 
-		self.stockage_area_gauche = np.array([[7.0,13.7]]).T
+		self.stockage_area_gauche = np.array([[7.0, 13.7]]).T
 		self.stockage_area_droite = -self.stockage_area_gauche
 		self.state = 0
 		self.go_stock = False
@@ -85,7 +85,7 @@ class Opitmisation(Node):
 
 
 	def callback_catch(self,msg):
-		self.get_logger().info(('state = '+str(self.state)))
+		self.get_logger().info(('state = ' + str(self.state)))
 		if msg.data != self.last_data:
 			if msg.data == True: 
 				self.state += 1
