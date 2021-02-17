@@ -10,7 +10,7 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-	('share/' + package_name + '/launch', ['launch/launch.launch.py'])
+	('share/' + package_name + '/launch', ['launch/launch.launch.py','launch/optimisation.launch.py'])
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -22,7 +22,8 @@ setup(
     entry_points={
         'console_scripts': [
 	'go_to_point = scaraball_control.go_to_point:main',
-	'control_pinces = scaraball_control.control_pince:main'
+	'control_pinces = scaraball_control.control_pince:main',
+        'optimisation = scaraball_control.optimisation:main'
         ],
     },
 )
