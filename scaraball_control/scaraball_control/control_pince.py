@@ -8,7 +8,7 @@ from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
 
 
-# ----------------------- ROS2 Car Node -----------------------
+# ----------------------- ROS2 Pinces Node -----------------------
 
 
 class ControlPinces(Node):
@@ -25,7 +25,6 @@ class ControlPinces(Node):
 		self.take_ball = True
 		self.relache_ball = True
 
-
 	def callback_initialize(self,msg):
 		self.publisher_in_pince.publish(Bool(data=False))
 		if msg.data == True and self.take_ball:
@@ -39,8 +38,6 @@ class ControlPinces(Node):
 			self.publisher_in_pince.publish(Bool(data=True))
 		if msg.data == False:
 			self.take_ball = True
-
-		
 
 	def callback_relache(self,msg):
 		self.publisher_out_pince.publish(Bool(data=False))
@@ -56,9 +53,6 @@ class ControlPinces(Node):
 		if msg.data == False:
 			self.relache_ball = True
 			
-		
-
-
 	def ouvre(self,t):
 		print('ouvre')
 		control = Twist()
@@ -89,7 +83,6 @@ class ControlPinces(Node):
 		self.publisher_roues_commande.publish(control)
 		time.sleep(0.2)
 
-
 	def ferme(self,t):
 		print('ferme')
 		control = Twist()
@@ -104,7 +97,6 @@ class ControlPinces(Node):
 		control.angular.z =0.0
 		self.publisher_roues_commande.publish(control)
 		time.sleep(1)
-
 
 
 # ----------------------- Main program -----------------------
