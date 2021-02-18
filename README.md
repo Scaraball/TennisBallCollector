@@ -13,6 +13,12 @@ OpenCV
 
 ### Démarrer la simulation
 ```
+ros2 launch tennis_court tennis_court.launch.py
+```
+```
+ros2 launch my_robot_gazebo spawner.launch.py
+```
+```
 ros2 launch my_robot_gazebo spawner.launch.py
 ```
 
@@ -43,6 +49,16 @@ Ce dépôt doit être cloné dans le dossier `src` d'un workspace ROS 2.
 Le dossier `tennis_court` est un package ROS contenant le monde dans lequel le robot ramasseur de balle devra évoluer ainsi qu'un script permettant de faire apparaître des balles dans la simulation.
 Ce package ne doit pas être modifié.
 Consulter le [README](tennis_court/README.md) du package pour plus d'informations.
+
+### Package `scaraball_camera`
+
+Le dossier `scaraball_camera` est un package ROS contenant le noeud qui permet de récupérer les positions du robot, des balles et des joueurs en utilisant le tracking d'OpenCV. Il permet de récupérer l'ordre d'apparition des balles.
+Consulter le [README](scaraball_camera/README.md) du package pour plus d'informations.
+
+### Package `scaraball_description`
+
+Le dossier `scaraball_description` est un package ROS contenant les fichiers urdf de notre robot. Ce sont les fichiers qui permettent de créer la géométrie de notre robot et de l'afficher sous Gazebo.
+Consulter le [README](scaraball_description/README.md) du package pour plus d'informations.
 
 
 ### Documents
