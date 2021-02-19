@@ -295,13 +295,18 @@ class position_node(Node):
             pose_array.poses.append(pose)
 
         pose_human = PoseArray()
-        poseL = Pose()
-        poseL.position.x = float(self.Lepen.real_pos[0])
-        poseL.position.y = float(self.Lepen.real_pos[1])
+        poseL = Pose()	
+        xl,yl = pixel2gazebo(self.Lepen.real_pos)
+
+        poseL.position.x = float(xl)
+        poseL.position.y = float(yl)
 
         poseM = Pose()
-        poseM.position.x = float(self.Melenchon.real_pos[0])
-        poseM.position.y = float(self.Melenchon.real_pos[1])
+
+        xm, ym = pixel2gazebo(self.Melenchon.real_pos)
+
+        poseM.position.x = float(xm)
+        poseM.position.y = float(ym)
 
         pose_human.poses.append(poseL)
         pose_human.poses.append(poseM)
