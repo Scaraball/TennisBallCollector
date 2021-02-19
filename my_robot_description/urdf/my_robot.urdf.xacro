@@ -382,8 +382,8 @@
   <gazebo>
       <plugin name="gazebo_ros_vacuum_gripper" filename="libgazebo_ros_vacuum_gripper.so">
         <link_name>vacuum_gripper</link_name>
-  	<max_force>100000</max_force>
-  	<max_distance>10.0</max_distance>
+  	<max_force>0.01</max_force>
+  	<max_distance>1.5</max_distance>
       </plugin>
   </gazebo>
 

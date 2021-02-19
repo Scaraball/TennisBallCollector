@@ -67,7 +67,7 @@ class ControllerNode(Node):
 		self.yaw_precision = math.pi / 90 # +/- 2 degree allowed
 		self.dist_precision = 1.  # longueur des pinces 0.6
 
-		time.sleep(5)
+		time.sleep(1)
 
 # ----------------------- Callback for ROS Topics -----------------------
 
@@ -79,7 +79,6 @@ class ControllerNode(Node):
 
 	def timer_callback(self):
 		if self.getFirstTarget:
-			print("hello")
 			self.publisher_catch.publish(Bool(data=True))
 			self.getFirstTarget = False
 		else:
@@ -128,7 +127,9 @@ class ControllerNode(Node):
 	def clbk_obstacles(self, msg):
 		obs1 = np.array([[msg.poses[0].position.x], [msg.poses[0].position.y]])
 		obs2 = np.array([[msg.poses[1].position.x], [msg.poses[1].position.y]])
-		self.obstacles = self.generate_circle(obs1,1.) + self.generate_circle(obs2,1.)
+		self.obstacles = self.generate_circle(obs1,0.5) + self.generate_circle(obs2,0.5)
+		self.obstacles = self.obstacles + self.generate_circle(obs1,0.25) + self.generate_circle(obs2,0.25)
+		self.obstacles = self.obstacles + self.generate_circle(obs1,0.1) + self.generate_circle(obs2,0.1)
 
 	# ----------------------- Additional functions -----------------------
 	
@@ -137,22 +138,24 @@ class ControllerNode(Node):
 		self.publisher_nearball.publish(Bool(data=False))
 		self.publisher_relache.publish(Bool(data=False))
 
-		p = np.array([[self.position.x], [self.position.y]])		
+		a = 0.25*np.sin(self.yaw) / (0.25*np.cos(self.yaw))
+		u = a * np.ones((2, 1))
+		u = u / np.linalg.norm(u)
+		p = np.array([[self.position.x], [self.position.y]]) + 0.25 * u	
 		self.phat = np.array([[self.desired_position.x], [self.desired_position.y]])		
-		w = - 1. * (p - self.phat)
+		w = - 2. * (p - self.phat)
 
-		for qhat in self.obstacles: w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 2
-		for qhat in self.wall1: w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 10
-		for qhat in self.wall3: w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 10
-		for qhat in self.wall2: w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 10
-		for qhat in self.wall4: w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 10
-		for qhat in self.net: w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 10
+		for qhat in self.obstacles: w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 4
+		# for qhat in self.wall1: w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 10
+		# for qhat in self.wall3: w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 10
+		# for qhat in self.wall2: w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 10
+		# for qhat in self.wall4: w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 10
+		for qhat in self.net: w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 4
 
 		
 		tetabar = np.arctan2(w[1, 0], w[0, 0])
 		u = 2*self.sawtooth(tetabar - self.yaw)
-		
-		print()
+
 		dist_to_waypoint = np.linalg.norm(p-self.phat)
 		if dist_to_waypoint <= 1.: 
 			self.change_state(state=1)
