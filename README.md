@@ -12,15 +12,20 @@ OpenCV
 
 
 ### Démarrer la simulation
+
+Il faut tout d'abord lancer gazebo avec l'environnement qui ici est un terrain de tennis.
 ```
 ros2 launch tennis_court tennis_court.launch.py
 ```
+Ensuite il faudra faire apparaître le robot dans gazebo avec la commande suivante
 ```
 ros2 launch my_robot_gazebo spawner.launch.py
 ```
+La commande ci-dessous permet de lancer l'algorithme de détection des balles et des obstacles grâce à la caméra placée au dessus du terrain.
 ```
 ros2 launch scaraball_camera position.launch.py
 ```
+Enfin, on doit lancer l'algorithme de contrôle du robot avec la commande ci-dessous.
 ```
 ros2 launch scaraball_control launch.launch.py
 ```
@@ -64,7 +69,7 @@ Le dossier `scaraball_description` est un package ROS contenant les fichiers urd
 
 ### Package `scaraball_gazebo`
 
-Le dossier `scaraball_gazebo` est un package ROS permettant de lancer le robot pour la visualisation dans Gazebo. Il contient uniquement 2 fichiers launch qui permettent de faire spawner le robot sur le terrain de tennis.
+Le dossier `scaraball_gazebo` est un package ROS permettant de lancer le robot pour la visualisation dans Gazebo. Il contient uniquement 2 fichiers launch, un qui permet de lancer gazebo et avec le robot, et un qui permet de faire apparaitre le robot dans une simulation déjà existante. C'est ce deuxième fichier launch qui sera le plus utilisé car nous aurons déjà lancé l'environnement.
 
 
 ### Documents
