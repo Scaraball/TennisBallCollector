@@ -33,12 +33,11 @@ class ControlPinces(Node):
 			self.stop()
 			self.ferme(3)
 			self.stop_ouverture_fermeture()
-			self.recule(1)
+			self.recule(2)
 			self.stop()
 			self.take_ball = False
 			self.publisher_in_pince.publish(Bool(data=True))
 		if msg.data == False:
-			self.publisher_in_pince.publish(Bool(data=False))
 			self.take_ball = True
 
 	def callback_relache(self, msg):
@@ -52,7 +51,6 @@ class ControlPinces(Node):
 			self.relache_ball = False
 			self.publisher_out_pince.publish(Bool(data=True))
 		if msg.data == False:
-			self.publisher_out_pince.publish(Bool(data=False))
 			self.relache_ball = True
 			
 	def ouvre(self,t):

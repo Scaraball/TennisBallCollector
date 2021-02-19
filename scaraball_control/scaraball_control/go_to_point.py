@@ -31,6 +31,7 @@ class ControllerNode(Node):
 		self.subscriber_rob = self.create_subscription(Pose, 'posRob', self.clbk_rob, 0)
 		self.subscriber_pose = self.create_subscription(Odometry, 'odom_roues', self.clbk_odom, 0)
 		self.subscriber_target = self.create_subscription(Pose, 'next_pos', self.clbk_target, 0)
+		self.subscriber_position_obstacles = self.create_subscription(PoseArray,"/posHuman",self.clbk_obstacles, 0)
 		self.timer = self.create_timer(1/20., self.timer_callback)  # 20 Hz
 
 		self.get_logger().info('Initialisation complete')
@@ -44,6 +45,8 @@ class ControllerNode(Node):
 		self.going_to_ball = True
 		self.started = False
 		self.taking_ball = False
+		self.obstacles = []
+		self.getFirstTarget = True
 
 		self.balls = []
 		self.regions = None
@@ -52,6 +55,7 @@ class ControllerNode(Node):
 		self.yaw_precision = math.pi / 90 # +/- 2 degree allowed
 		self.dist_precision = 1.  # longueur des pinces 0.6
 
+		time.sleep(1)
 # ----------------------- Callback for ROS Topics -----------------------
 
 	def clbk_odom(self, msg):
@@ -61,23 +65,28 @@ class ControllerNode(Node):
 		self.yaw = self.euler_from_quaternion(quatx, quaty, quatz, quatw)[2]
 
 	def timer_callback(self):
-		if not self.started: return
+		if self.getFirstTarget:
+			print("hello")
+			self.publisher_catch.publish(Bool(data=True))
+			self.getFirstTarget = False
+		else:
+			self.publisher_catch.publish(Bool(data=False))
 
-		self.publisher_catch.publish(Bool(data=False))
+		if not self.started: return
 
 		if self.state == 0: self.move_to()
 		elif self.state == 1: self.done()
 
 	def clbk_inpince(self, msg):
-		print("In pince :", msg.data)
 		if msg.data == True:
+			self.taking_ball = False
 			self.publisher_catch.publish(Bool(data=True))
 			self.change_state(state=0) 
 			
 
 	def clbk_outpince(self, msg):
-		print("Out pince :", msg.data)
 		if msg.data == True:
+			print('OUT_PINCE')
 			self.publisher_catch.publish(Bool(data=True))
 			self.change_state(state=0)
 			
@@ -94,24 +103,34 @@ class ControllerNode(Node):
 
 	def clbk_target(self, msg):
 		self.desired_position = Point(x=msg.position.x, y=msg.position.y)
-		if msg.position.x == 7.0 and msg.position.y == 13.7:
+		if abs(msg.position.x) == 7.0 and abs(msg.position.y) == 13.7:
 			self.going_to_ball = False
 		else:
 			self.going_to_ball = True
-		print(self.desired_position)
 		self.started = True
 
 	def clbk_rob(self, msg):  # pose
 		self.position.x, self.position.y = msg.position.x, msg.position.y
 
+	def clbk_obstacles(self, msg):
+		obs1 = np.array([[msg.poses[0].position.x], [msg.poses[0].position.y]])
+		obs2 = np.array([[msg.poses[1].position.x], [msg.poses[1].position.y]])
+		self.obstacles = [obs1, obs2]
+
 	# ----------------------- Additional functions -----------------------
 	
 	def move_to(self):
+		self.publisher_catch.publish(Bool(data=False))
+		self.publisher_nearball.publish(Bool(data=False))
+		self.publisher_relache.publish(Bool(data=False))
 
 		p = np.array([[self.position.x], [self.position.y]])		
 		self.phat = np.array([[self.desired_position.x], [self.desired_position.y]])		
 		w = - 1. * (p - self.phat)
-		# w = w + (p - qhat) / norm(p - qhat) ** 3
+
+		for qhat in self.obstacles:
+			print("Obstacle : ", qhat)
+			w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 3
 		
 		tetabar = np.arctan2(w[1, 0], w[0, 0])
 		u = self.sawtooth(tetabar - self.yaw)
