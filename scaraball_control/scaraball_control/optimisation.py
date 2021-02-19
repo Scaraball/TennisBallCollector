@@ -7,7 +7,7 @@ import time
 from rclpy.node import Node
 
 
-class Opitmisation(Node):
+class Optimisation(Node):
 	
 	def __init__(self):
 		super().__init__('Optimisation')
@@ -67,7 +67,7 @@ class Opitmisation(Node):
 					self.distance_detour = (ball2_to_stock +ball1_to_ball2)
 					self.new_ball = self.ball_2_position
 
-		if self.new_ball.all() != None and self.two_balls:
+		if (self.new_ball != None).all() and self.two_balls:
 			position = Pose()
 			position.position.x =  self.new_ball[0,0]
 			position.position.y =  self.new_ball[1,0]
@@ -85,7 +85,7 @@ class Opitmisation(Node):
 
 
 	def callback_catch(self,msg):
-		self.get_logger().info(('state = ' + str(self.state)))
+		# self.get_logger().info(('state = ' + str(self.state)))
 		if msg.data != self.last_data:
 			if msg.data == True: 
 				self.state += 1
@@ -108,7 +108,7 @@ class Opitmisation(Node):
 def main(args=None):
 	rclpy.init(args=args)
 
-	node = Opitmisation()
+	node = Optimisation()
 	rclpy.spin(node)
 
 	# Destroy the node explicitly
