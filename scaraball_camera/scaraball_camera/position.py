@@ -10,7 +10,7 @@ from rclpy.qos import qos_profile_sensor_data
 from geometry_msgs.msg import Pose,PoseArray
 
 import math
-from navigation.munkres import linear_assignment # local import
+from scaraball_camera.munkres import linear_assignment # local import
 
 #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
 
@@ -49,6 +49,75 @@ class Ball(object):
 
 # = = = = = = = = = = = = = = = = = = = =
 
+class Human(object):
+    def __init__(self, truc):
+        self.pos = [0,0]
+        self.entre_jambes = 20
+        self.name = truc
+        self.list_pos = [[0,0]]
+        self.real_pos = [0,0]
+
+
+    def update_pos(self,x,y,w,h):
+
+        if self.name == "right":
+
+            if (y + h / 2) > 320:  # on est en bas a droite
+                pos_x = x
+                pos_y = y + self.entre_jambes / 2
+            else:  # on est en haut a droite
+                pos_x = x
+                pos_y = y + h - self.entre_jambes / 2
+            self.pos[0] = int(pos_x)
+            self.pos[1] = int(pos_y)
+
+
+
+        if self.name == "left":
+
+            if (y+h/2) > 320: # on est en bas a gauche
+                pos_x = x + w
+                pos_y = y + self.entre_jambes/2
+
+            else: # on est en haut a gauche
+                pos_x = x + w
+                pos_y = y + h - self.entre_jambes/2
+
+            # if abs(self.pos[0]-pos_x) < 20 and  abs(self.pos[1]-pos_y): # valeurs cohérentes
+            self.pos[0] = int(pos_x)
+            self.pos[1] = int(pos_y)
+        if abs(self.pos[0] - self.list_pos[-1][0]) < 20 or len(self.list_pos) == 1:
+            self.historique(1)
+
+
+    def historique(self, n):
+        [x,y] = self.pos
+        self.list_pos.append([x,y])
+        if len(self.list_pos) >= n:
+            self.list_pos.pop(0)
+
+        liste_x = [x[0] for x in self.list_pos]
+        liste_y = [y[1] for y in self.list_pos]
+
+        posx = int(np.mean(liste_x))
+        posy = int(np.mean(liste_y))
+        self.real_pos = [posx,posy]
+
+
+    def draw(self, cvImg):
+
+        cv2.circle(cvImg, (self.real_pos[0],self.real_pos[1]), 5, (0, 0, 255), -1)
+        if self.name == "right":
+            cv2.putText(cvImg, "Mme Lepen", (self.real_pos[0] + 10, self.real_pos[1]), cv2.FONT_HERSHEY_SIMPLEX ,0.7, (200, 0, 0) , 1, cv2.LINE_AA)
+        else:
+            cv2.putText(cvImg, "M. Melenchon", (self.real_pos[0] + 10, self.real_pos[1]), cv2.FONT_HERSHEY_SIMPLEX ,0.7, (0, 0, 255) , 1, cv2.LINE_AA)
+
+
+
+
+
+
+
 class position_node(Node):
 
     def __init__(self):
@@ -56,11 +125,18 @@ class position_node(Node):
         self.get_logger().info('init')
         self.cmd_posBall_publisher = self.create_publisher(PoseArray,"/posBall",10)
         self.cmd_posRob_publisher = self.create_publisher(Pose, "/posRob", 10)
+        self.cmd_posHuman_publisher = self.create_publisher(PoseArray, "/posHuman", 10)
+
         self.lidar_subscriber = self.create_subscription(Image,"/zenith_camera/image_raw",self.img_callback, qos_profile_sensor_data)
         self.list_balls = []
         self.nb = 0
+        self.list_human = []
+        self.nb_human = 0
         self.robot = [0,0]
         time.sleep(0.5)
+
+        self.Lepen = Human("right")
+        self.Melenchon = Human("left")
 
     def ball_detection(self,cvImg): # Function for the balls detection
 
@@ -69,7 +145,6 @@ class position_node(Node):
         hsv = cv2.cvtColor(cvImg, cv2.COLOR_BGR2HSV)
         tresh = cv2.inRange(hsv, lower_y, upper_y)
         contours, hierarchy = cv2.findContours(tresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
         keypoints = []
         for c in contours:
             area = cv2.contourArea(c)
@@ -80,7 +155,7 @@ class position_node(Node):
                     M = cv2.moments(c)
 
                     if (M["m00"] != 0):
-                        # print("Je suis M")
+
 
                         cX = int(M["m10"] / M["m00"])
                         cY = int(M["m01"] / M["m00"])
@@ -114,6 +189,36 @@ class position_node(Node):
                     self.list_balls.append(Ball(keypoints[i],self.nb))
                     self.nb +=1
 
+    def human_detection(self,cvImg): # Function for the balls detection
+
+        # lower_b = np.array([0, 0, 25])
+        # upper_b = np.array([30, 50, 100])
+        lower_b = np.array([70, 0, 35])
+        upper_b = np.array([250, 180, 160])
+        hsv = cv2.cvtColor(cvImg, cv2.COLOR_BGR2HSV)
+        tresh = cv2.inRange(hsv, lower_b, upper_b)
+        contours, hierarchy = cv2.findContours(tresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+
+        for c in contours:
+
+            rect = cv2.boundingRect(c)
+            if rect[2] < 100 or rect[3] < 100:
+                x, y, w, h = rect
+                if h > 15 or w > 15:
+
+                    if x > 640: # concerne le joueur a droite
+                        self.Lepen.update_pos(x,y,w,h)
+
+                    else:
+                        self.Melenchon.update_pos(x,y,w,h)
+
+
+
+
+
+
+
 
     def robot_detection(self,cvImg): # Function for the robot position detection
 
@@ -140,6 +245,8 @@ class position_node(Node):
                         self.robot = [cX,cY]
 
 
+
+
     def img_callback(self,msg):
 
         br = cv_bridge.CvBridge()
@@ -151,6 +258,7 @@ class position_node(Node):
 
         self.ball_detection(cvImg)
         self.robot_detection(cvImg)
+        self.human_detection(cvImg)
 
         # - - - - - -
 
@@ -159,6 +267,13 @@ class position_node(Node):
 
         cv2.circle(cvImg_bis, (self.robot[0] , self.robot[1] ), 6, (0,0,255), -1)
         cv2.putText(cvImg_bis, 'Robot' , (self.robot[0] + 10, self.robot[1] ), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0,255), 1, cv2.LINE_AA)
+
+        cv2.imshow('balls', cvImg_bis)
+
+        # - - - - - -
+
+        self.Lepen.draw(cvImg_bis)
+        self.Melenchon.draw(cvImg_bis)
 
         cv2.imshow('balls', cvImg_bis)
         cv2.waitKey(1)
@@ -175,8 +290,27 @@ class position_node(Node):
             pose.position.x = float(X)
             pose.position.y = float(Y)
             pose.position.z = float(b.number)
-
+            # infologger = 'position balle '+ str(int(pose.position.z)) +  ' est : ' + str(pose.position.x) + ', ' + str(pose.position.y)
+            # self.get_logger().info(infologger)
             pose_array.poses.append(pose)
+
+        pose_human = PoseArray()
+        poseL = Pose()	
+        xl,yl = pixel2gazebo(self.Lepen.real_pos)
+
+        poseL.position.x = float(xl)
+        poseL.position.y = float(yl)
+
+        poseM = Pose()
+
+        xm, ym = pixel2gazebo(self.Melenchon.real_pos)
+
+        poseM.position.x = float(xm)
+        poseM.position.y = float(ym)
+
+        pose_human.poses.append(poseL)
+        pose_human.poses.append(poseM)
+
 
         pose_rob = Pose()
 
@@ -187,7 +321,7 @@ class position_node(Node):
 
         self.cmd_posBall_publisher.publish(pose_array)
         self.cmd_posRob_publisher.publish(pose_rob)
-
+        self.cmd_posHuman_publisher.publish(pose_human)
 
 
 

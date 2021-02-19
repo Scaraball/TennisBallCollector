@@ -26,27 +26,27 @@ class ControlPinces(Node):
 		self.relache_ball = True
 
 	def callback_initialize(self,msg):
-		self.publisher_in_pince.publish(Bool(data=False))
 		if msg.data == True and self.take_ball:
 			self.ouvre(2)
 			self.stop_ouverture_fermeture()
 			self.avance()
 			self.stop()
-			self.ferme(3)
+			self.ferme(1.5)
 			self.stop_ouverture_fermeture()
+			self.recule(2)
+			self.stop()
 			self.take_ball = False
 			self.publisher_in_pince.publish(Bool(data=True))
 		if msg.data == False:
 			self.take_ball = True
 
-	def callback_relache(self,msg):
-		self.publisher_out_pince.publish(Bool(data=False))
+	def callback_relache(self, msg):
 		if msg.data == True and self.relache_ball:
 			self.ouvre(3)
 			self.stop_ouverture_fermeture()
-			self.recule()
+			self.recule(2)
 			self.stop()
-			self.ferme(2)
+			self.ferme(1)
 			self.stop_ouverture_fermeture()
 			self.relache_ball = False
 			self.publisher_out_pince.publish(Bool(data=True))
@@ -63,40 +63,44 @@ class ControlPinces(Node):
 	def stop_ouverture_fermeture(self):
 		print('stop')
 		control = Twist()
-		control.angular.z =0.0
+		control.angular.z = 0.0
 		self.publisher_pinces_commande.publish(control)
 		time.sleep(0.2)
 
 	def avance(self):
 		print('avance')
+		self.stop()
+
 		control = Twist()
-		control.linear.x = 1.0
-		control.angular.z =0.0
+		control.linear.x = 0.5
 		self.publisher_roues_commande.publish(control)
-		time.sleep(1)
+		time.sleep(2)
 
 	def stop(self):
 		print('stop')
 		control = Twist()
 		control.linear.x = 0.0
-		control.angular.z =0.0
+		control.angular.z = 0.0
 		self.publisher_roues_commande.publish(control)
-		time.sleep(0.2)
+		time.sleep(0.5)
 
 	def ferme(self,t):
 		print('ferme')
 		control = Twist()
-		control.angular.z = -0.2 
+		control.angular.z = -0.4 
 		self.publisher_pinces_commande.publish(control)
 		time.sleep(t)
 
-	def recule(self):
+	def recule(self, t):
 		print('recule')
+		self.stop()
+
+		
 		control = Twist()
-		control.linear.x = -1.0
-		control.angular.z =0.0
+		control.linear.x = -0.5
+		control.angular.z = 0.0
 		self.publisher_roues_commande.publish(control)
-		time.sleep(1)
+		time.sleep(t)
 
 
 # ----------------------- Main program -----------------------
