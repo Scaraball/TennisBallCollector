@@ -71,6 +71,11 @@ Le dossier `scaraball_description` est un package ROS contenant les fichiers urd
 
 Le dossier `scaraball_gazebo` est un package ROS permettant de lancer le robot pour la visualisation dans Gazebo. Il contient uniquement 2 fichiers launch, un qui permet de lancer gazebo et avec le robot, et un qui permet de faire apparaitre le robot dans une simulation déjà existante. C'est ce deuxième fichier launch qui sera le plus utilisé car nous aurons déjà lancé l'environnement.
 
+### Package `scaraball_control`
+
+Le dossier `scaraball_control` est un package ROS contenant le noeud qui permet le contrôle du robot. Il contient plusieurs fichiers qui permettent la commande pour la navigation, mais aussi le choix des balles à aller récupérer et l'ouverture des pinces.
+Consulter le [README](scaraball_control/README.md) du package pour plus d'informations.
+
 
 ### Documents
 
