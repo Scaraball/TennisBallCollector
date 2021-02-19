@@ -121,13 +121,13 @@
        	<visual>
        		<origin xyz = "0.29 0 0"/>
          		<geometry>
-							<box size="0.60 0.05 0.05"/>
+							<box size="0.60 0.05 0.2"/>
          		</geometry>
        		</visual>
 		<collision>
 			<origin xyz = "0.29 0 0"/>
   			<geometry>
-           			<box size="0.60 0.05 0.05"/>
+           			<box size="0.60 0.05 0.2"/>
         	</geometry>
       		</collision>
     	<xacro:box_inertial mass="0.1" sx="0.2" sy="0.05" sz="0.05">
@@ -140,13 +140,13 @@
        	<visual>
        		<origin xyz = "0.29 0 0"/>
      		<geometry>
-				<box size="0.60 0.05 0.05"/>
+				<box size="0.60 0.05 0.2"/>
      		</geometry>
    		</visual>
 		<collision>
 			<origin xyz = "0.29 0 0"/>
   			<geometry>
-       			<box size="0.60 0.05 0.05"/>
+       			<box size="0.60 0.05 0.2"/>
         	</geometry>
   		</collision>
     	<xacro:box_inertial mass="0.1" sx="0.2" sy="0.05" sz="0.05">
@@ -158,12 +158,12 @@
 	<link name="boule_gauche">
        	<visual>
      		<geometry>
-				<sphere radius="0.05"/>
+				<sphere radius="0.07"/>
      		</geometry>
    		</visual>
 		<collision>
   			<geometry>
-           		<sphere radius="0.05"/>
+           		<sphere radius="0.07"/>
         	</geometry>
       		</collision>
     	<xacro:sphere_inertial mass="0.05" r="0.05">
@@ -172,8 +172,8 @@
 	</link>
 
 	<gazebo reference="boule_gauche">
-		<mu1>5</mu1>
-		<mu2>5</mu2>
+		<mu1>0.1</mu1>
+		<mu2>0.1</mu2>
 		<kp>500000.0</kp>
 		<kd>10.0</kd>
 		<minDepth>0.001</minDepth>
@@ -185,12 +185,12 @@
 	<link name="boule_droite">
        	<visual>
      		<geometry>
-				<sphere radius="0.05"/>
+				<sphere radius="0.07"/>
      		</geometry>
        	</visual>
 		<collision>
   			<geometry>
-           		<sphere radius="0.05"/>
+           		<sphere radius="0.07"/>
         	</geometry>
       	</collision>
     	<xacro:sphere_inertial mass="0.05" r="0.05">
@@ -199,8 +199,8 @@
 	</link>
 
 	<gazebo reference="boule_droite">
-		<mu1>5</mu1>
-		<mu2>5</mu2>
+		<mu1>0.1</mu1>
+		<mu2>0.1</mu2>
 		<kp>500000.0</kp>
 		<kd>10.0</kd>
 		<minDepth>0.001</minDepth>
@@ -209,8 +209,8 @@
 	</gazebo>
 	
 	<gazebo reference="bras_gauche">
-		<mu1>1.2</mu1>
-		<mu2>1.2</mu2>
+		<mu1>0.1</mu1>
+		<mu2>0.1</mu2>
 		<kp>500000.0</kp>
 		<kd>10.0</kd>
 		<minDepth>0.001</minDepth>
@@ -219,8 +219,8 @@
 	</gazebo>
 
 	<gazebo reference="bras_droit">
-		<mu1>1.2</mu1>
-		<mu2>1.2</mu2>
+		<mu1>0.1</mu1>
+		<mu2>0.1</mu2>
 		<kp>500000.0</kp>
 		<kd>10.0</kd>
 		<minDepth>0.001</minDepth>
@@ -261,14 +261,14 @@
 	<joint name="base_to_bras_droit" type="continuous">
      		<parent link="base_link"/>
      		<child link="bras_droit"/>
-		<origin rpy="0 0 -0.2" xyz="0.25 -0.07 -0.1"/>
+		<origin rpy="0 0 -0.2" xyz="0.25 -0.07 -0.06"/>
 		<axis xyz="0 0 1" />
 	</joint>
 	
 		<joint name="base_to_bras_gauche" type="continuous">
      		<parent link="base_link"/>
      		<child link="bras_gauche"/>
-		<origin rpy="0 0 0.2" xyz="0.25 0.07 -0.1"/>
+		<origin rpy="0 0 0.2" xyz="0.25 0.07 -0.06"/>
 		<axis xyz="0 0 1" />
 	</joint>
 
@@ -276,13 +276,13 @@
 	<joint name="bras_gauche_to_boule" type="fixed">
 	     	<parent link="bras_gauche"/>
 	     	<child link="boule_gauche"/>
-		<origin rpy="0 0 0" xyz="0.61 0 0"/>
+		<origin rpy="0 0 0" xyz="0.61 -0.02 -0.05"/>
 	</joint>
 
 	<joint name="bras_droite_to_boule" type="fixed">
      		<parent link="bras_droit"/>
      		<child link="boule_droite"/>
-		<origin rpy="0 0 0" xyz="0.61 0 0"/>
+		<origin rpy="0 0 0" xyz="0.61 0.02 -0.05"/>
 	</joint>
 
 	<!--> __________________________________________________________ </!-->
@@ -350,33 +350,6 @@
 	</gazebo>
 						
 
-	<gazebo reference="lidar">
-		<sensor name="sensor_ray" type="ray">
-		<ray>
-			<scan>
-				<horizontal>
-					<samples>720</samples>
-					<resolution>1.0</resolution>
-					<min_angle>-1.57</min_angle>
-					<max_angle>1.57</max_angle>
-				</horizontal>
-			</scan>
-			<range>
-				<min>0.2</min>
-				<max>20.0</max>
-			</range>
-		</ray>
-		<always_on>true</always_on>
-		<update_rate>10</update_rate>
-		<visualize>true</visualize>
-		<plugin name="laserscan" filename="libgazebo_ros_ray_sensor.so">
-			<ros>
-				<remapping>~/out:=scan</remapping>
-			</ros>
-			<output_type>sensor_msgs/LaserScan</output_type>
-		</plugin>
-		</sensor>
-	</gazebo>
 
 
 </robot>
