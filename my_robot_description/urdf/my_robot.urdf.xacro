@@ -56,8 +56,8 @@
      </link>
 
 	<gazebo reference="rightwheel">
-		<mu1>1.2</mu1>
-		<mu2>1.2</mu2>
+		<mu1>2.0</mu1>
+		<mu2>2.0</mu2>
 		<kp>500000.0</kp>
 		<kd>10.0</kd>
 		<minDepth>0.001</minDepth>
@@ -82,8 +82,8 @@
      </link>
 
 	<gazebo reference="leftwheel">
-		<mu1>1.2</mu1>
-		<mu2>1.2</mu2>
+		<mu1>2.0</mu1>
+		<mu2>2.0</mu2>
 		<kp>500000.0</kp>
 		<kd>10.0</kd>
 		<minDepth>0.001</minDepth>
@@ -172,6 +172,7 @@
 	</link>
 
 	<gazebo reference="boule_gauche">
+   		 <selfCollide>true</selfCollide>
 		<mu1>0.1</mu1>
 		<mu2>0.1</mu2>
 		<kp>500000.0</kp>
@@ -199,6 +200,7 @@
 	</link>
 
 	<gazebo reference="boule_droite">
+    <selfCollide>true</selfCollide>
 		<mu1>0.1</mu1>
 		<mu2>0.1</mu2>
 		<kp>500000.0</kp>
@@ -209,6 +211,7 @@
 	</gazebo>
 	
 	<gazebo reference="bras_gauche">
+    <selfCollide>true</selfCollide>
 		<mu1>0.1</mu1>
 		<mu2>0.1</mu2>
 		<kp>500000.0</kp>
@@ -219,6 +222,7 @@
 	</gazebo>
 
 	<gazebo reference="bras_droit">
+    <selfCollide>true</selfCollide>
 		<mu1>0.1</mu1>
 		<mu2>0.1</mu2>
 		<kp>500000.0</kp>

@@ -87,7 +87,7 @@ class Human(object):
             self.pos[0] = int(pos_x)
             self.pos[1] = int(pos_y)
         if abs(self.pos[0] - self.list_pos[-1][0]) < 20 or len(self.list_pos) == 1:
-            self.historique(3)
+            self.historique(1)
 
 
     def historique(self, n):
