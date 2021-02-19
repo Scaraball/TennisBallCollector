@@ -71,7 +71,6 @@ class ControllerNode(Node):
 	def clbk_inpince(self, msg):
 		print("In pince :", msg.data)
 		if msg.data == True:
-			self.going_to_ball = False
 			self.publisher_catch.publish(Bool(data=True))
 			self.change_state(state=0) 
 			
@@ -79,7 +78,6 @@ class ControllerNode(Node):
 	def clbk_outpince(self, msg):
 		print("Out pince :", msg.data)
 		if msg.data == True:
-			self.going_to_ball = True
 			self.publisher_catch.publish(Bool(data=True))
 			self.change_state(state=0)
 			
@@ -96,6 +94,10 @@ class ControllerNode(Node):
 
 	def clbk_target(self, msg):
 		self.desired_position = Point(x=msg.position.x, y=msg.position.y)
+		if msg.position.x == 7.0 and msg.position.y == 13.7:
+			self.going_to_ball = False
+		else:
+			self.going_to_ball = True
 		print(self.desired_position)
 		self.started = True
 
