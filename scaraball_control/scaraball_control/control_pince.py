@@ -31,7 +31,7 @@ class ControlPinces(Node):
 			self.stop_ouverture_fermeture()
 			self.avance()
 			self.stop()
-			self.ferme(3)
+			self.ferme(1.5)
 			self.stop_ouverture_fermeture()
 			self.recule(2)
 			self.stop()
@@ -46,7 +46,7 @@ class ControlPinces(Node):
 			self.stop_ouverture_fermeture()
 			self.recule(2)
 			self.stop()
-			self.ferme(2)
+			self.ferme(1)
 			self.stop_ouverture_fermeture()
 			self.relache_ball = False
 			self.publisher_out_pince.publish(Bool(data=True))
@@ -69,10 +69,7 @@ class ControlPinces(Node):
 
 	def avance(self):
 		print('avance')
-		control = Twist()
-		control.angular.z = 0.0
-		self.publisher_roues_commande.publish(control)
-		time.sleep(1)
+		self.stop()
 
 		control = Twist()
 		control.linear.x = 0.5
@@ -85,17 +82,20 @@ class ControlPinces(Node):
 		control.linear.x = 0.0
 		control.angular.z = 0.0
 		self.publisher_roues_commande.publish(control)
-		time.sleep(0.2)
+		time.sleep(0.5)
 
 	def ferme(self,t):
 		print('ferme')
 		control = Twist()
-		control.angular.z = -0.2 
+		control.angular.z = -0.4 
 		self.publisher_pinces_commande.publish(control)
 		time.sleep(t)
 
 	def recule(self, t):
 		print('recule')
+		self.stop()
+
+		
 		control = Twist()
 		control.linear.x = -0.5
 		control.angular.z = 0.0

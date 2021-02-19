@@ -48,6 +48,18 @@ class ControllerNode(Node):
 		self.obstacles = []
 		self.getFirstTarget = True
 
+		self.yrange = np.linspace(-14.8, 14.8, 100)
+		self.wall1 = [np.array([[7.8], [y]]) for y in self.yrange]
+		self.wall3 = [np.array([[-7.8], [y]]) for y in self.yrange]
+
+		self.xrange = np.linspace(-7.8, 7.8, 100)
+		self.wall2 = [np.array([[x], [-14.8]]) for x in self.xrange]
+		self.wall4 = [np.array([[x], [14.8]]) for x in self.xrange]
+
+		self.netrange = np.linspace(-5.5, 5.5, 100)
+		self.net = [np.array([[x], [0.]]) for x in self.netrange]
+		self.circle1, self.circle2 = [], []
+
 		self.balls = []
 		self.regions = None
 
@@ -55,7 +67,8 @@ class ControllerNode(Node):
 		self.yaw_precision = math.pi / 90 # +/- 2 degree allowed
 		self.dist_precision = 1.  # longueur des pinces 0.6
 
-		time.sleep(1)
+		time.sleep(5)
+
 # ----------------------- Callback for ROS Topics -----------------------
 
 	def clbk_odom(self, msg):
@@ -86,7 +99,7 @@ class ControllerNode(Node):
 
 	def clbk_outpince(self, msg):
 		if msg.data == True:
-			print('OUT_PINCE')
+			self.taking_ball = False
 			self.publisher_catch.publish(Bool(data=True))
 			self.change_state(state=0)
 			
@@ -115,7 +128,7 @@ class ControllerNode(Node):
 	def clbk_obstacles(self, msg):
 		obs1 = np.array([[msg.poses[0].position.x], [msg.poses[0].position.y]])
 		obs2 = np.array([[msg.poses[1].position.x], [msg.poses[1].position.y]])
-		self.obstacles = [obs1, obs2]
+		self.obstacles = self.generate_circle(obs1,1.) + self.generate_circle(obs2,1.)
 
 	# ----------------------- Additional functions -----------------------
 	
@@ -128,19 +141,24 @@ class ControllerNode(Node):
 		self.phat = np.array([[self.desired_position.x], [self.desired_position.y]])		
 		w = - 1. * (p - self.phat)
 
-		for qhat in self.obstacles:
-			print("Obstacle : ", qhat)
-			w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 3
+		for qhat in self.obstacles: w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 2
+		for qhat in self.wall1: w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 10
+		for qhat in self.wall3: w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 10
+		for qhat in self.wall2: w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 10
+		for qhat in self.wall4: w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 10
+		for qhat in self.net: w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 10
+
 		
 		tetabar = np.arctan2(w[1, 0], w[0, 0])
-		u = self.sawtooth(tetabar - self.yaw)
+		u = 2*self.sawtooth(tetabar - self.yaw)
 		
+		print()
 		dist_to_waypoint = np.linalg.norm(p-self.phat)
 		if dist_to_waypoint <= 1.: 
 			self.change_state(state=1)
 
 		msg_cmd = Twist()
-		msg_cmd.linear.x = 0.5
+		msg_cmd.linear.x = 0.7
 		msg_cmd.angular.z = u
 		self.publisher_command.publish(msg_cmd)  # angular velocity command (yaw)
 
@@ -156,12 +174,16 @@ class ControllerNode(Node):
 				self.publisher_nearball.publish(Bool(data=True))
 				self.publisher_relache.publish(Bool(data=False))
 			else:
+				self.taking_ball = True
 				self.publisher_nearball.publish(Bool(data=False))
 				self.publisher_relache.publish(Bool(data=True))
 
 	def change_state(self, state): 
 		self.state = state
 	
+	def generate_circle(self,c, r):
+		return [np.array([[c[0, 0]+r*np.cos(teta)], [c[1, 0]+r*np.sin(teta)]]) for teta in np.arange(0, 2*np.pi, 0.1)]
+
 	def sawtooth(self, x): return (x + np.pi) % (2 * np.pi) - np.pi   # or equivalently   2*arctan(tan(x/2))
 
 	def euler_from_quaternion(self, x, y, z, w):
