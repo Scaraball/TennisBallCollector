@@ -4,7 +4,7 @@ Ce script récupère la position du robot, des balles et des humains présent su
 L'ordre d'apparition des balles est conservé. 
 Les données sont renvoyées sur les topics /posHuman /posRob /posBall
 
-##Lancement du package
+## Lancement du package
 On suppose que la simulation gazebo est déjà ouverte. 
 
 ```
