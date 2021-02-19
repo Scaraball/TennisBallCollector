@@ -232,6 +232,22 @@
 		<material>Gazebo/FlatBlack</material>
 	</gazebo>
 
+	<link name="vacuum_gripper">
+	    <gravity>0</gravity>
+	    <visual>
+	      <origin rpy="0 0 0" xyz="0 0 0"/>
+	      <geometry>
+		<cylinder radius="0.005" length="0.01"/>
+	      </geometry>
+	      <material name="transparent">
+		<color rgba="0 0 0 0"/>
+	      </material>
+	    </visual>
+      <xacro:sphere_inertial mass="0.05" r="0.05">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </xacro:sphere_inertial>
+	  </link>
+
 
 		
 	<!--> __________________________________________________________ </!-->
@@ -288,6 +304,16 @@
      		<child link="boule_droite"/>
 		<origin rpy="0 0 0" xyz="0.61 0.02 -0.05"/>
 	</joint>
+
+
+	    <joint name="gripper_joint" type="revolute">
+	      <axis xyz="1 0 0" />
+	      <parent link="base_link" />
+	      <child link="vacuum_gripper" />
+	      <origin rpy="0 1.5708 0" xyz="0.0 0.125 -0.1" />
+	      <limit effort="50" velocity="50" lower="0" upper="0" />
+	      <dynamics damping="0.0" friction="10"/>
+	    </joint>
 
 	<!--> __________________________________________________________ </!-->
  
@@ -352,8 +378,13 @@
 			<robot_base_frame>base_link</robot_base_frame>
 		</plugin>
 	</gazebo>
-						
 
-
+  <gazebo>
+      <plugin name="gazebo_ros_vacuum_gripper" filename="libgazebo_ros_vacuum_gripper.so">
+        <link_name>vacuum_gripper</link_name>
+  	<max_force>100000</max_force>
+  	<max_distance>10.0</max_distance>
+      </plugin>
+  </gazebo>
 
 </robot>
