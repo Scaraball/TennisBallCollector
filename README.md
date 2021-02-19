@@ -19,7 +19,10 @@ ros2 launch tennis_court tennis_court.launch.py
 ros2 launch my_robot_gazebo spawner.launch.py
 ```
 ```
-ros2 launch my_robot_gazebo spawner.launch.py
+ros2 launch scaraball_camera position.launch.py
+```
+```
+ros2 launch scaraball_control launch.launch.py
 ```
 
 
@@ -58,7 +61,10 @@ Consulter le [README](scaraball_camera/README.md) du package pour plus d'informa
 ### Package `scaraball_description`
 
 Le dossier `scaraball_description` est un package ROS contenant les fichiers urdf de notre robot. Ce sont les fichiers qui permettent de créer la géométrie de notre robot et de l'afficher sous Gazebo.
-Consulter le [README](scaraball_description/README.md) du package pour plus d'informations.
+
+### Package `scaraball_gazebo`
+
+Le dossier `scaraball_gazebo` est un package ROS permettant de lancer le robot pour la visualisation dans Gazebo. Il contient uniquement 2 fichiers launch qui permettent de faire spawner le robot sur le terrain de tennis.
 
 
 ### Documents
