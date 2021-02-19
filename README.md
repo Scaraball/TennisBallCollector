@@ -30,11 +30,11 @@ ros2 launch scaraball_control launch.launch.py
 Groupe3
 
 ### Membres
-Maha Halimi
-Julien Piranda
-Paul Pineau
-Mourtaza Kassamaly
-Quentin Vintras
+###### Maha Halimi
+###### Julien Piranda
+###### Paul Pineau
+###### Mourtaza Kassamaly
+###### Quentin Vintras
 
 
 ### Gestion de projet
