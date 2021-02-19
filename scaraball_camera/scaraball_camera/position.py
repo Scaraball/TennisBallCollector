@@ -10,7 +10,7 @@ from rclpy.qos import qos_profile_sensor_data
 from geometry_msgs.msg import Pose,PoseArray
 
 import math
-from navigation.munkres import linear_assignment # local import
+from scaraball_camera.munkres import linear_assignment # local import
 
 #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
 
@@ -87,7 +87,7 @@ class Human(object):
             self.pos[0] = int(pos_x)
             self.pos[1] = int(pos_y)
         if abs(self.pos[0] - self.list_pos[-1][0]) < 20 or len(self.list_pos) == 1:
-            self.historique(3)
+            self.historique(1)
 
 
     def historique(self, n):
@@ -295,13 +295,18 @@ class position_node(Node):
             pose_array.poses.append(pose)
 
         pose_human = PoseArray()
-        poseL = Pose()
-        poseL.position.x = float(self.Lepen.real_pos[0])
-        poseL.position.y = float(self.Lepen.real_pos[1])
+        poseL = Pose()	
+        xl,yl = pixel2gazebo(self.Lepen.real_pos)
+
+        poseL.position.x = float(xl)
+        poseL.position.y = float(yl)
 
         poseM = Pose()
-        poseM.position.x = float(self.Melenchon.real_pos[0])
-        poseM.position.y = float(self.Melenchon.real_pos[1])
+
+        xm, ym = pixel2gazebo(self.Melenchon.real_pos)
+
+        poseM.position.x = float(xm)
+        poseM.position.y = float(ym)
 
         pose_human.poses.append(poseL)
         pose_human.poses.append(poseM)
