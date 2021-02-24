@@ -51,7 +51,6 @@ class ControlPinces(Node):
 
 			self.req.data = False
 			self.cli.call_async(self.req)
-			time.sleep(3)
 			
 			self.take_ball = False
 			self.publisher_in_pince.publish(Bool(data=True))
@@ -62,6 +61,7 @@ class ControlPinces(Node):
 	def callback_relache(self, msg):
 		if msg.data == True and self.relache_ball:
 			time.sleep(3)  # wait for the ball to disappear
+			self.recule(2)
 			self.relache_ball = False
 			self.publisher_out_pince.publish(Bool(data=True))
 		
@@ -97,6 +97,7 @@ class ControlPinces(Node):
 
 	def ferme(self,t):
 		control = Twist()
+		print("FERME")
 		control.angular.z = -0.4 
 		self.publisher_pinces_commande.publish(control)
 		time.sleep(t)

@@ -25,7 +25,8 @@ class Optimisation(Node):
 		self.last_data = False
 
 	def callback_calc(self,msg):
-
+		if len(msg.poses) == 0: return
+		
 		# on commence par initialiser la position de la nouvelle balle à aller chercher et la distance du détour
 		self.new_ball = np.array([[None], [None]])
 		self.distance_detour = float('inf')
@@ -56,8 +57,8 @@ class Optimisation(Node):
 				self.publisher_next_ball_pos.publish(position)
 			else:
 				position = Pose()
-				position.position.x =  self.ball_1_position[0, 0]
-				position.position.y =  self.ball_1_position[1, 0]
+				position.position.x = self.ball_1_position[0, 0]
+				position.position.y = self.ball_1_position[1, 0]
 				self.publisher_next_ball_pos.publish(position)
 
 

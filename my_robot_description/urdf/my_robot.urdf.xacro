@@ -279,13 +279,13 @@
 	<joint name="base_to_bras_droit" type="continuous">
      		<parent link="base_link"/>
      		<child link="bras_droit"/>
-		<origin rpy="0 0 -0.2" xyz="0.15 -0.07 -0.06"/>
+		<origin rpy="0 0 -0.2" xyz="0.15 -0.07 -0.05"/>
 		<axis xyz="0 0 1" />
 	</joint>
 		<joint name="base_to_bras_gauche" type="continuous">
      		<parent link="base_link"/>
      		<child link="bras_gauche"/>
-		<origin rpy="0 0 0.2" xyz="0.15 0.07 -0.06"/>
+		<origin rpy="0 0 0.2" xyz="0.15 0.07 -0.05"/>
 		<axis xyz="0 0 1" />
 	</joint>
 
@@ -378,8 +378,8 @@
 	<gazebo>
 		<plugin name="gazebo_ros_vacuum_gripper" filename="libgazebo_ros_vacuum_gripper.so">
 			<link_name>vacuum_gripper</link_name>
-	  		<max_force>0.01</max_force>
-	  		<max_distance>1.5</max_distance>
+	  		<max_force>0.5</max_force>
+	  		<max_distance>2.</max_distance>
 	      	</plugin>
 	</gazebo>
 
