@@ -1,0 +1,386 @@
+<?xml version="1.0"?>
+<robot name="my_robot" xmlns:xacro="http://wiki.ros.org/xacro">
+
+	<xacro:include filename="$(find scaraball_description)/urdf/inertias.xacro"/>
+
+	<link name="base_link">
+		<visual>
+			<geometry>
+				<box size="0.5 0.25 0.25"/>
+			</geometry>
+		</visual>
+		<collision>
+  			<geometry>
+           		<box size="0.5 0.25 0.25"/>
+        	</geometry>
+  		</collision>
+  		<xacro:box_inertial mass="1." sx="0.5" sy="0.25" sz="0.25">
+			<origin xyz="0 0 0" rpy="0 0 0"/>		
+		</xacro:box_inertial>
+	</link>
+
+	<link name="lidar">
+   		<visual>
+     		<geometry>
+			<cylinder length="0.05" radius="0.1"/>
+     		</geometry>
+   		</visual>
+		<collision>
+  			<geometry>
+       			<cylinder length="0.05" radius="0.1"/>
+        	</geometry>
+  		</collision>
+		<xacro:cylinder_inertial mass="0.05" r="0.1" l="0.05">
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+		</xacro:cylinder_inertial>
+	</link>
+	
+	<gazebo reference="lidar">
+		<material>Gazebo/Green</material>
+	</gazebo>
+
+	<link name="rightwheel">
+		<visual>
+			<geometry>         			
+         			<cylinder length="0.05" radius="0.1"/>
+			</geometry>
+       	</visual>
+		<collision>
+  			<geometry>
+       				<cylinder length="0.05" radius="0.1"/>
+        		</geometry>
+  		</collision>
+    		<xacro:cylinder_inertial mass="0.3" r="0.1" l="0.05">
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+		</xacro:cylinder_inertial>
+     </link>
+
+	<gazebo reference="rightwheel">
+		<mu1>2.0</mu1>
+		<mu2>2.0</mu2>
+		<kp>500000.0</kp>
+		<kd>10.0</kd>
+		<minDepth>0.001</minDepth>
+		<maxVel>0.1</maxVel>
+		<material>Gazebo/FlatBlack</material>
+	</gazebo>
+
+	<link name="leftwheel">
+   		<visual>
+     		<geometry>
+			<cylinder length="0.05" radius="0.1"/>
+     		</geometry>
+   		</visual>
+		<collision>
+  			<geometry>
+       				<cylinder length="0.05" radius="0.1"/>
+        		</geometry>
+  		</collision>
+    		<xacro:cylinder_inertial mass="0.3" r="0.1" l="0.05">
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+		</xacro:cylinder_inertial>
+     	</link>
+
+	<gazebo reference="leftwheel">
+		<mu1>2.0</mu1>
+		<mu2>2.0</mu2>
+		<kp>500000.0</kp>
+		<kd>10.0</kd>
+		<minDepth>0.001</minDepth>
+		<maxVel>0.1</maxVel>
+		<material>Gazebo/FlatBlack</material>
+	</gazebo>
+
+	<link name="crazywheel">
+   		<visual>
+     		<geometry>
+			<sphere radius="0.05"/>
+     		</geometry>
+   		</visual>
+		<collision>
+  			<geometry>
+       				<sphere radius="0.05"/>
+        		</geometry>
+  		</collision>
+    		<xacro:sphere_inertial mass="0.05" r="0.05">
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+		</xacro:sphere_inertial>
+	</link>
+
+	<gazebo reference="crazywheel">
+		<mu1>0.1</mu1>
+		<mu2>0.1</mu2>
+		<kp>500000.0</kp>
+		<kd>10.0</kd>
+		<minDepth>0.001</minDepth>
+		<maxVel>0.1</maxVel>
+		<material>Gazebo/FlatBlack</material>
+	</gazebo>
+	
+	<link name="bras_droit">
+       	<visual>
+       		<origin xyz = "0.29 0 0"/>
+         		<geometry>
+				<box size="0.40 0.05 0.2"/>
+         		</geometry>
+       		</visual>
+		<collision>
+			<origin xyz = "0.29 0 0"/>
+  			<geometry>
+           			<box size="0.40 0.05 0.2"/>
+        		</geometry>
+      		</collision>
+    		<xacro:box_inertial mass="0.1" sx="0.2" sy="0.05" sz="0.05">
+			<origin xyz="0 0 0" rpy="0 0 0"/>		
+		</xacro:box_inertial>
+	</link>
+	
+	
+	<link name="bras_gauche">
+       	<visual>
+       		<origin xyz = "0.29 0 0"/>
+     		<geometry>
+			<box size="0.40 0.05 0.2"/>
+     		</geometry>
+   		</visual>
+		<collision>
+			<origin xyz = "0.29 0 0"/>
+  				<geometry>
+       			<box size="0.40 0.05 0.2"/>
+        	</geometry>
+  		</collision>
+    		<xacro:box_inertial mass="0.1" sx="0.2" sy="0.05" sz="0.05">
+			<origin xyz="0 0 0" rpy="0 0 0"/>		
+		</xacro:box_inertial>
+	</link>
+	
+	
+	<link name="boule_gauche">
+       	<visual>
+     		<geometry>
+			<sphere radius="0.07"/>
+     		</geometry>
+   		</visual>
+		<collision>
+  			<geometry>
+           		<sphere radius="0.07"/>
+        	</geometry>
+      		</collision>
+    		<xacro:sphere_inertial mass="0.05" r="0.05">
+			<origin xyz="0 0 0" rpy="0 0 0"/>		
+		</xacro:sphere_inertial>
+	</link>
+
+	<gazebo reference="boule_gauche">
+   		<selfCollide>true</selfCollide>
+		<mu1>0.1</mu1>
+		<mu2>0.1</mu2>
+		<kp>500000.0</kp>
+		<kd>10.0</kd>
+		<minDepth>0.001</minDepth>
+		<maxVel>0.1</maxVel>
+		<material>Gazebo/FlatBlack</material>
+	</gazebo>
+	
+		
+	<link name="boule_droite">
+       		<visual>
+     			<geometry>
+				<sphere radius="0.07"/>
+     			</geometry>
+       		</visual>
+		<collision>
+  			<geometry>
+           			<sphere radius="0.07"/>
+        		</geometry>
+      		</collision>
+    		<xacro:sphere_inertial mass="0.05" r="0.05">
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+		</xacro:sphere_inertial>
+	</link>
+
+	<gazebo reference="boule_droite">
+    		<selfCollide>true</selfCollide>
+		<mu1>0.1</mu1>
+		<mu2>0.1</mu2>
+		<kp>500000.0</kp>
+		<kd>10.0</kd>
+		<minDepth>0.001</minDepth>
+		<maxVel>0.1</maxVel>
+		<material>Gazebo/FlatBlack</material>
+	</gazebo>
+	
+	<gazebo reference="bras_gauche">
+    		<selfCollide>true</selfCollide>
+		<mu1>0.1</mu1>
+		<mu2>0.1</mu2>
+		<kp>500000.0</kp>
+		<kd>10.0</kd>
+		<minDepth>0.001</minDepth>
+		<maxVel>0.1</maxVel>
+		<material>Gazebo/FlatBlack</material>
+	</gazebo>
+
+	<gazebo reference="bras_droit">
+    		<selfCollide>true</selfCollide>
+		<mu1>0.1</mu1>
+		<mu2>0.1</mu2>
+		<kp>500000.0</kp>
+		<kd>10.0</kd>
+		<minDepth>0.001</minDepth>
+		<maxVel>0.1</maxVel>
+		<material>Gazebo/FlatBlack</material>
+	</gazebo>
+
+	<link name="vacuum_gripper">
+		<gravity>0</gravity>
+	    	<visual>
+	    		<origin rpy="0 0 0" xyz="0 0 0"/>
+	      			<geometry>
+					<cylinder radius="0.005" length="0.01"/>
+	      			</geometry>
+	      		<material name="transparent">
+				<color rgba="0 0 0 0"/>
+	      		</material>
+	    	</visual>
+      		<xacro:sphere_inertial mass="0.05" r="0.05">
+      			<origin rpy="0 0 0" xyz="0 0 0"/>
+    		</xacro:sphere_inertial>
+	  </link>
+
+	<!--> __________________________________________________________ </!-->
+	
+	<joint name="base_to_lidar" type="fixed">
+     		<parent link="base_link"/>
+     		<child link="lidar"/>
+		<origin rpy="0 0 0" xyz="-0.15 0 0.15"/>
+	</joint>
+
+	<joint name="base_to_rightwheel" type="continuous">
+     		<parent link="base_link"/>
+     		<child link="rightwheel"/>
+		<origin rpy="-1.57 0 0" xyz="-0.15 -0.130 -0.075"/> <!--> largeur du chassis / 2 + longueur du cylindre </!-->
+		<axis xyz="0 0 1" />
+	</joint>
+
+	<joint name="base_to_leftwheel" type="continuous">
+     		<parent link="base_link"/>
+     		<child link="leftwheel"/>
+		<origin rpy="-1.57 0 0" xyz="-0.15 0.125 -0.075"/>
+		<axis xyz="0 0 1" />
+	</joint>
+	
+	<joint name="base_to_crazywheel" type="fixed">
+     		<parent link="base_link"/>
+     		<child link="crazywheel"/>
+     		<origin rpy="0 0 0" xyz="0.15 0 -0.125"/>
+	</joint>
+	
+	<joint name="base_to_bras_droit" type="continuous">
+     		<parent link="base_link"/>
+     		<child link="bras_droit"/>
+		<origin rpy="0 0 -0.2" xyz="0.15 -0.07 -0.05"/>
+		<axis xyz="0 0 1" />
+	</joint>
+		<joint name="base_to_bras_gauche" type="continuous">
+     		<parent link="base_link"/>
+     		<child link="bras_gauche"/>
+		<origin rpy="0 0 0.2" xyz="0.15 0.07 -0.05"/>
+		<axis xyz="0 0 1" />
+	</joint>
+
+
+	<joint name="bras_gauche_to_boule" type="fixed">
+	     	<parent link="bras_gauche"/>
+	     	<child link="boule_gauche"/>
+		<origin rpy="0 0 0" xyz="0.51 -0.02 -0.05"/>
+	</joint>
+
+	<joint name="bras_droite_to_boule" type="fixed">
+     		<parent link="bras_droit"/>
+     		<child link="boule_droite"/>
+		<origin rpy="0 0 0" xyz="0.51 0.02 -0.05"/>
+	</joint>
+
+
+	<joint name="gripper_joint" type="revolute">
+	      <axis xyz="1 0 0" />
+	      <parent link="base_link" />
+	      <child link="vacuum_gripper" />
+	      <origin rpy="0 1.5708 0" xyz="0.0 0.125 -0.1" />
+	      <limit effort="50" velocity="50" lower="0" upper="0" />
+	      <dynamics damping="0.0" friction="10"/>
+	</joint>
+
+	<!--> __________________________________________________________ </!-->
+ 
+	<gazebo>
+		<plugin name='diff_drive' filename='libgazebo_ros_diff_drive.so'>
+			<ros> <!-- Remap default topics -->
+	         		<argument>cmd_vel:=cmd_roues</argument>
+	          		<argument>odom:=odom_roues</argument>
+	        	</ros>
+
+        		<!-- wheels -->
+			<left_joint>base_to_leftwheel</left_joint>
+			<right_joint>base_to_rightwheel</right_joint>
+
+			<!-- kinematics -->
+			<wheel_separation>0.25</wheel_separation>
+			<wheel_diameter>0.2</wheel_diameter>
+
+			<!-- limits -->
+			<max_wheel_torque>20</max_wheel_torque>
+			<max_wheel_acceleration>1.0</max_wheel_acceleration>
+
+			<!-- output -->
+			<publish_odom>true</publish_odom>
+			<publish_odom_tf>true</publish_odom_tf>
+			<publish_wheel_tf>true</publish_wheel_tf>
+
+			<odometry_frame>odom</odometry_frame>
+			<robot_base_frame>base_link</robot_base_frame>
+		</plugin>
+	</gazebo>
+						
+	<gazebo>
+		<plugin name='diff_drive_pince' filename='libgazebo_ros_diff_drive.so'>
+		
+			<ros> <!-- Remap default topics -->
+			  <argument>cmd_vel:=cmd_pince</argument>
+			  <argument>odom:=odom_pince</argument>
+			</ros>
+
+			<!-- wheels -->
+			<left_joint>base_to_bras_droit</left_joint>
+			<right_joint>base_to_bras_gauche</right_joint>
+
+			<!-- kinematics -->
+			<wheel_separation>0.25</wheel_separation>
+			<wheel_diameter>0.2</wheel_diameter>
+
+
+			<!-- limits -->
+			<max_wheel_torque>20</max_wheel_torque>
+			<max_wheel_acceleration>1.0</max_wheel_acceleration>
+
+
+			<!-- output -->
+			<publish_odom>true</publish_odom>
+			<publish_odom_tf>true</publish_odom_tf>
+			<publish_wheel_tf>true</publish_wheel_tf>
+
+			<odometry_frame>odom</odometry_frame>
+			<robot_base_frame>base_link</robot_base_frame>
+		</plugin>
+	</gazebo>
+
+	<gazebo>
+		<plugin name="gazebo_ros_vacuum_gripper" filename="libgazebo_ros_vacuum_gripper.so">
+			<link_name>vacuum_gripper</link_name>
+	  		<max_force>0.5</max_force>
+	  		<max_distance>2.</max_distance>
+	      	</plugin>
+	</gazebo>
+
+</robot>
