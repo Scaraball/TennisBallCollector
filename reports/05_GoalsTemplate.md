@@ -5,7 +5,7 @@ PO: Julien PIRANDA
 
 ## Fonctionnalités attendues
 
-1 - Présentation
+1 - Présentation <br />
 2 - Finalisation du robot
 
 Durant cette séance, nous finalisons les derniers détails en regroupant l'ensemble des travaux. 
@@ -17,15 +17,13 @@ En parallèle, nous travaillons sur la présentation du projet.
 
 1.1 - Finalisation du power point
 
-2.1 - travailler sur un moyen de faire tenir la balle dans la pince
-2.2 - trouver le chemin le plus court vers les balles en éviant les obstacles
-2.3 - Aller vers la balle sans collisions avec un obstacle
-2.4 - Trouver un chemin pour optimiser le temps de ramassage des balles
-2.5 - Optimisation du contrôleur
+2.1 - travailler sur un moyen de faire tenir la balle dans la pince <br />
+2.2 - trouver le chemin le plus court vers les balles en éviant les obstacles <br />
+2.3 - Aller vers la balle sans collisions avec un obstacle <br />
+2.4 - Trouver un chemin pour optimiser le temps de ramassage des balles <br />
+2.5 - Optimisation du contrôleur <br />
 
 
 ## Challenges techniques
 
-Intégration d'OpenCV et de DeepLearning avec ROS
-Conception d'une pièce en CAO pour la pince
-Cartographier l'environnement avec un lidar
+Faire marcher toute les parties ensemble. Avoir un robot fonctionnel et efficace.
