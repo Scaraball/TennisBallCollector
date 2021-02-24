@@ -87,8 +87,6 @@ class DisplayNode():
 			VX = VX + (X1 - qhat[0]) / np.sqrt((X1 - qhat[0]) ** 2 + (X2 - qhat[1]) ** 2) ** 11
 			VY = VY + (X2 - qhat[1]) / np.sqrt((X1 - qhat[0]) ** 2 + (X2 - qhat[1]) ** 2) ** 11
 
-
-
 		# for qhat in self.wall1: w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 8
 		# for qhat in self.wall3: w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 8
 		# for qhat in self.wall2: w = w + (p - qhat) / np.linalg.norm(p - qhat) ** 8
@@ -99,6 +97,7 @@ class DisplayNode():
 		self.ax.quiver(Mx, My, VX/R, VY/R)
 
 		plt.show()
+
 
 # -----------------------------------
 
