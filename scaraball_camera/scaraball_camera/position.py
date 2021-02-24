@@ -32,6 +32,7 @@ class Ball(object):
     staticID = 0
     def __init__(self, pos, nb):
         self.pos = [pos]
+        self.compteur = 0
         self.lastSeen = 0
         self.number = nb
         Ball.staticID += 1
@@ -58,7 +59,7 @@ class Human(object):
         self.real_pos = [0,0]
 
 
-    def update_pos(self,x,y,w,h):
+    def update_pos(self, x, y, w, h):
 
         if self.name == "right":
 
@@ -71,11 +72,9 @@ class Human(object):
             self.pos[0] = int(pos_x)
             self.pos[1] = int(pos_y)
 
-
-
         if self.name == "left":
 
-            if (y+h/2) > 320: # on est en bas a gauche
+            if (y + h/2) > 320: # on est en bas a gauche
                 pos_x = x + w
                 pos_y = y + self.entre_jambes/2
 
@@ -86,12 +85,13 @@ class Human(object):
             # if abs(self.pos[0]-pos_x) < 20 and  abs(self.pos[1]-pos_y): # valeurs cohérentes
             self.pos[0] = int(pos_x)
             self.pos[1] = int(pos_y)
+        
         if abs(self.pos[0] - self.list_pos[-1][0]) < 20 or len(self.list_pos) == 1:
             self.historique(1)
 
 
     def historique(self, n):
-        [x,y] = self.pos
+        [x, y] = self.pos
         self.list_pos.append([x,y])
         if len(self.list_pos) >= n:
             self.list_pos.pop(0)
@@ -103,9 +103,7 @@ class Human(object):
         posy = int(np.mean(liste_y))
         self.real_pos = [posx,posy]
 
-
     def draw(self, cvImg):
-
         cv2.circle(cvImg, (self.real_pos[0],self.real_pos[1]), 5, (0, 0, 255), -1)
         if self.name == "right":
             cv2.putText(cvImg, "Mme Lepen", (self.real_pos[0] + 10, self.real_pos[1]), cv2.FONT_HERSHEY_SIMPLEX ,0.7, (200, 0, 0) , 1, cv2.LINE_AA)
@@ -113,9 +111,7 @@ class Human(object):
             cv2.putText(cvImg, "M. Melenchon", (self.real_pos[0] + 10, self.real_pos[1]), cv2.FONT_HERSHEY_SIMPLEX ,0.7, (0, 0, 255) , 1, cv2.LINE_AA)
 
 
-
-
-
+# = = = = = = = = = = = = = = = = = = = =
 
 
 class position_node(Node):
@@ -138,10 +134,10 @@ class position_node(Node):
         self.Lepen = Human("right")
         self.Melenchon = Human("left")
 
-    def ball_detection(self,cvImg): # Function for the balls detection
+    def ball_detection(self, cvImg): # Function for the balls detection
 
-        lower_y = np.array([10, 150, 100])
-        upper_y = np.array([40, 255, 255])
+        lower_y = np.array([20, 150, 100])
+        upper_y = np.array([30, 255, 255])
         hsv = cv2.cvtColor(cvImg, cv2.COLOR_BGR2HSV)
         tresh = cv2.inRange(hsv, lower_y, upper_y)
         contours, hierarchy = cv2.findContours(tresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -153,14 +149,10 @@ class position_node(Node):
             if area < 1000 and area > 10:
                 if (peri != 0):
                     M = cv2.moments(c)
-
                     if (M["m00"] != 0):
-
-
                         cX = int(M["m10"] / M["m00"])
                         cY = int(M["m01"] / M["m00"])
                         keypoints.append([cX,cY])
-
 
         if len(self.list_balls) == 0:  # no bees yet, no matching to do, just add them
             for kp in keypoints:
@@ -184,21 +176,21 @@ class position_node(Node):
                     freeBees[ass[1]] = False
                     freeKP[ass[0]] = False
 
+            for i in range(len(freeBees)):
+                if freeBees[i]:
+                    self.list_balls.pop(i)
+
             for i in range(len(freeKP)):  # new keypoints
                 if freeKP[i]:
                     self.list_balls.append(Ball(keypoints[i],self.nb))
                     self.nb +=1
 
-    def human_detection(self,cvImg): # Function for the balls detection
-
-        # lower_b = np.array([0, 0, 25])
-        # upper_b = np.array([30, 50, 100])
+    def human_detection(self, cvImg): # Function for the balls detection
         lower_b = np.array([70, 0, 35])
         upper_b = np.array([250, 180, 160])
         hsv = cv2.cvtColor(cvImg, cv2.COLOR_BGR2HSV)
         tresh = cv2.inRange(hsv, lower_b, upper_b)
         contours, hierarchy = cv2.findContours(tresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
 
         for c in contours:
 
@@ -206,21 +198,12 @@ class position_node(Node):
             if rect[2] < 100 or rect[3] < 100:
                 x, y, w, h = rect
                 if h > 15 or w > 15:
-
                     if x > 640: # concerne le joueur a droite
                         self.Lepen.update_pos(x,y,w,h)
-
                     else:
                         self.Melenchon.update_pos(x,y,w,h)
 
-
-
-
-
-
-
-
-    def robot_detection(self,cvImg): # Function for the robot position detection
+    def robot_detection(self, cvImg): # Function for the robot position detection
 
         lower_g = np.array([41, 200, 100])
         upper_g = np.array([86, 255, 255])
@@ -244,11 +227,7 @@ class position_node(Node):
 
                         self.robot = [cX,cY]
 
-
-
-
     def img_callback(self,msg):
-
         br = cv_bridge.CvBridge()
         zenith_cam = br.imgmsg_to_cv2(msg)
         cvImg = cv2.cvtColor(zenith_cam, cv2.COLOR_RGB2BGR)
@@ -290,8 +269,6 @@ class position_node(Node):
             pose.position.x = float(X)
             pose.position.y = float(Y)
             pose.position.z = float(b.number)
-            # infologger = 'position balle '+ str(int(pose.position.z)) +  ' est : ' + str(pose.position.x) + ', ' + str(pose.position.y)
-            # self.get_logger().info(infologger)
             pose_array.poses.append(pose)
 
         pose_human = PoseArray()
@@ -311,7 +288,6 @@ class position_node(Node):
         pose_human.poses.append(poseL)
         pose_human.poses.append(poseM)
 
-
         pose_rob = Pose()
 
         X_rob, Y_rob = pixel2gazebo(self.robot)
@@ -324,14 +300,13 @@ class position_node(Node):
         self.cmd_posHuman_publisher.publish(pose_human)
 
 
+# = = = = = = = = = = = = = = = = = = = =
+
 
 def main():
-
     rclpy.init()
     position = position_node()
     rclpy.spin(position)
-
-
 
 if __name__ =="__main__":
     main()

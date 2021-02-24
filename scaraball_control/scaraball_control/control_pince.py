@@ -18,11 +18,14 @@ class ControlPinces(Node):
 		super().__init__('ControlPinces')
 		self.subscriber_postion_ok = self.create_subscription(Bool,'near_ball',self.callback_initialize,1)
 		self.subscriber_relache_ok = self.create_subscription(Bool,'relache',self.callback_relache,1)
+		
 		self.publisher_pinces_commande = self.create_publisher(Twist, 'cmd_pince', 10)
 		self.publisher_roues_commande = self.create_publisher(Twist, 'cmd_roues', 10)
 		self.publisher_in_pince = self.create_publisher(Bool,'in_pince',10)
 		self.publisher_out_pince = self.create_publisher(Bool,'out_pince',10)
+		
 		self.get_logger().info('Initialisation complete')
+		
 		self.take_ball = True
 		self.relache_ball = True
 
@@ -31,12 +34,10 @@ class ControlPinces(Node):
 		self.req.data = False
 		self.cli.call_async(self.req)
 
-	def callback_initialize(self,msg):
+	def callback_initialize(self, msg):
 		if msg.data == True and self.take_ball:
 			self.ouvre(5)
 			self.stop_ouverture_fermeture()
-			# self.avance()
-			# self.stop()
 
 			self.req.data = True
 			self.cli.call_async(self.req)
@@ -44,47 +45,42 @@ class ControlPinces(Node):
 
 			self.ferme(5)
 			self.stop_ouverture_fermeture()
+			
 			self.recule(1)
 			self.stop()
 
 			self.req.data = False
 			self.cli.call_async(self.req)
-			time.sleep(3)
 			
 			self.take_ball = False
 			self.publisher_in_pince.publish(Bool(data=True))
+		
 		if msg.data == False:
 			self.take_ball = True
 
 	def callback_relache(self, msg):
 		if msg.data == True and self.relache_ball:
-			self.ouvre(3)
-			self.stop_ouverture_fermeture()
+			time.sleep(3)  # wait for the ball to disappear
 			self.recule(2)
-			self.stop()
-			self.ferme(1)
-			self.stop_ouverture_fermeture()
 			self.relache_ball = False
 			self.publisher_out_pince.publish(Bool(data=True))
+		
 		if msg.data == False:
 			self.relache_ball = True
 			
-	def ouvre(self,t):
-		print('ouvre')
+	def ouvre(self, t):
 		control = Twist()
 		control.angular.z = 0.2 
 		self.publisher_pinces_commande.publish(control)
 		time.sleep(t)
 
 	def stop_ouverture_fermeture(self):
-		print('stop')
 		control = Twist()
 		control.angular.z = 0.0
 		self.publisher_pinces_commande.publish(control)
 		time.sleep(0.2)
 
 	def avance(self):
-		print('avance')
 		self.stop()
 
 		control = Twist()
@@ -93,7 +89,6 @@ class ControlPinces(Node):
 		time.sleep(2)
 
 	def stop(self):
-		print('stop')
 		control = Twist()
 		control.linear.x = 0.0
 		control.angular.z = 0.0
@@ -101,16 +96,14 @@ class ControlPinces(Node):
 		time.sleep(0.5)
 
 	def ferme(self,t):
-		print('ferme')
 		control = Twist()
+		print("FERME")
 		control.angular.z = -0.4 
 		self.publisher_pinces_commande.publish(control)
 		time.sleep(t)
 
 	def recule(self, t):
-		print('recule')
 		self.stop()
-
 		
 		control = Twist()
 		control.linear.x = -0.5
