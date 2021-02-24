@@ -33,7 +33,7 @@ class ControlPinces(Node):
 
 	def callback_initialize(self,msg):
 		if msg.data == True and self.take_ball:
-			self.ouvre(2)
+			self.ouvre(5)
 			self.stop_ouverture_fermeture()
 			# self.avance()
 			# self.stop()
@@ -42,7 +42,7 @@ class ControlPinces(Node):
 			self.cli.call_async(self.req)
 			time.sleep(3)
 
-			self.ferme(1.5)
+			self.ferme(5)
 			self.stop_ouverture_fermeture()
 			self.recule(1)
 			self.stop()
