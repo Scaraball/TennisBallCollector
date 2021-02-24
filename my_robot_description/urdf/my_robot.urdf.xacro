@@ -121,14 +121,14 @@
        	<visual>
        		<origin xyz = "0.29 0 0"/>
          		<geometry>
-							<box size="0.60 0.05 0.2"/>
+				<box size="0.40 0.05 0.2"/>
          		</geometry>
        		</visual>
 		<collision>
 			<origin xyz = "0.29 0 0"/>
   			<geometry>
-           			<box size="0.60 0.05 0.2"/>
-        	</geometry>
+           			<box size="0.40 0.05 0.2"/>
+        		</geometry>
       		</collision>
     	<xacro:box_inertial mass="0.1" sx="0.2" sy="0.05" sz="0.05">
 				<origin xyz="0 0 0" rpy="0 0 0"/>		
@@ -140,13 +140,13 @@
        	<visual>
        		<origin xyz = "0.29 0 0"/>
      		<geometry>
-				<box size="0.60 0.05 0.2"/>
+				<box size="0.40 0.05 0.2"/>
      		</geometry>
    		</visual>
 		<collision>
 			<origin xyz = "0.29 0 0"/>
   			<geometry>
-       			<box size="0.60 0.05 0.2"/>
+       			<box size="0.40 0.05 0.2"/>
         	</geometry>
   		</collision>
     	<xacro:box_inertial mass="0.1" sx="0.2" sy="0.05" sz="0.05">
@@ -281,14 +281,14 @@
 	<joint name="base_to_bras_droit" type="continuous">
      		<parent link="base_link"/>
      		<child link="bras_droit"/>
-		<origin rpy="0 0 -0.2" xyz="0.25 -0.07 -0.06"/>
+		<origin rpy="0 0 -0.2" xyz="0.15 -0.07 -0.06"/>
 		<axis xyz="0 0 1" />
 	</joint>
 	
 		<joint name="base_to_bras_gauche" type="continuous">
      		<parent link="base_link"/>
      		<child link="bras_gauche"/>
-		<origin rpy="0 0 0.2" xyz="0.25 0.07 -0.06"/>
+		<origin rpy="0 0 0.2" xyz="0.15 0.07 -0.06"/>
 		<axis xyz="0 0 1" />
 	</joint>
 
@@ -296,13 +296,13 @@
 	<joint name="bras_gauche_to_boule" type="fixed">
 	     	<parent link="bras_gauche"/>
 	     	<child link="boule_gauche"/>
-		<origin rpy="0 0 0" xyz="0.61 -0.02 -0.05"/>
+		<origin rpy="0 0 0" xyz="0.51 -0.02 -0.05"/>
 	</joint>
 
 	<joint name="bras_droite_to_boule" type="fixed">
      		<parent link="bras_droit"/>
      		<child link="boule_droite"/>
-		<origin rpy="0 0 0" xyz="0.61 0.02 -0.05"/>
+		<origin rpy="0 0 0" xyz="0.51 0.02 -0.05"/>
 	</joint>
 
 
@@ -382,8 +382,8 @@
   <gazebo>
       <plugin name="gazebo_ros_vacuum_gripper" filename="libgazebo_ros_vacuum_gripper.so">
         <link_name>vacuum_gripper</link_name>
-  	<max_force>100000</max_force>
-  	<max_distance>10.0</max_distance>
+  	<max_force>0.01</max_force>
+  	<max_distance>1.5</max_distance>
       </plugin>
   </gazebo>
 

@@ -6,6 +6,7 @@ import rclpy
 import time
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
+from std_srvs.srv import SetBool
 
 
 # ----------------------- ROS2 Pinces Node -----------------------
@@ -25,16 +26,31 @@ class ControlPinces(Node):
 		self.take_ball = True
 		self.relache_ball = True
 
+		self.cli = self.create_client(SetBool, '/switch')
+		self.req = SetBool.Request()
+		self.req.data = False
+		self.cli.call_async(self.req)
+
 	def callback_initialize(self,msg):
 		if msg.data == True and self.take_ball:
-			self.ouvre(2)
+			self.ouvre(5)
 			self.stop_ouverture_fermeture()
-			self.avance()
-			self.stop()
-			self.ferme(1.5)
+			# self.avance()
+			# self.stop()
+
+			self.req.data = True
+			self.cli.call_async(self.req)
+			time.sleep(3)
+
+			self.ferme(5)
 			self.stop_ouverture_fermeture()
-			self.recule(2)
+			self.recule(1)
 			self.stop()
+
+			self.req.data = False
+			self.cli.call_async(self.req)
+			time.sleep(3)
+			
 			self.take_ball = False
 			self.publisher_in_pince.publish(Bool(data=True))
 		if msg.data == False:
