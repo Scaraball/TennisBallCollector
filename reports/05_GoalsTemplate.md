@@ -6,9 +6,7 @@ PO: Julien PIRANDA
 ## Fonctionnalités attendues
 
 Durant cette séance, nous finalisons les derniers détails en regroupant l'ensemble des travaux. 
-En parallèle, nous travaillons sur la présentation du projet.
-1 - Présentation
-2 - Finalisation du robot
+
 
 
 ## Tâches à réaliser
