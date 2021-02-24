@@ -2,14 +2,11 @@
 
 Ceci est un template de dépôt Git pour le cours d'ingénierie système et modélisation robotique à l'ENSTA Bretagne en 2021.
 
-
 ## Lancer la simulation
 
 ### Dépendences
 
-
 OpenCV
-
 
 ### Démarrer la simulation
 
@@ -19,7 +16,7 @@ ros2 launch tennis_court tennis_court.launch.py
 ```
 Ensuite il faudra faire apparaître le robot dans gazebo avec la commande suivante
 ```
-ros2 launch my_robot_gazebo spawner.launch.py
+ros2 launch scaraball_gazebo spawner.launch.py
 ```
 La commande ci-dessous permet de lancer l'algorithme de détection des balles et des obstacles grâce à la caméra placée au dessus du terrain.
 ```
@@ -29,7 +26,6 @@ Enfin, on doit lancer l'algorithme de contrôle du robot avec la commande ci-des
 ```
 ros2 launch scaraball_control launch.launch.py
 ```
-
 
 ## Groupe
 Groupe3
@@ -41,12 +37,9 @@ Groupe3
 ###### Mourtaza Kassamaly
 ###### Quentin Vintras
 
-
 ### Gestion de projet
 
 https://tree.taiga.io/project/mourtazakassamaly-tennisballcollector/timeline
-
-
 
 ## Structure du dépôt
 
@@ -76,14 +69,12 @@ Le dossier `scaraball_gazebo` est un package ROS permettant de lancer le robot p
 Le dossier `scaraball_control` est un package ROS contenant le noeud qui permet le contrôle du robot. Il contient plusieurs fichiers qui permettent la commande pour la navigation, mais aussi le choix des balles à aller récupérer et l'ouverture des pinces.
 Consulter le [README](scaraball_control/README.md) du package pour plus d'informations.
 
-
 ### Documents
 
 Le dossier `docs` contient tous les documents utiles au projet:
 - Des [instructions pour utiliser Git](docs/GitWorkflow.md)
 - Un [Mémo pour ROS 2 et Gazebo](docs/Memo_ROS2.pdf)
 - Les [slides de la présentation Git](docs/GitPresentation.pdf)
-
 
 ### Rapports
 
